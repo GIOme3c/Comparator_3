@@ -1,0 +1,64 @@
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* IE10+ CSS styles go here */
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+td {
+border: 2px solid black;
+padding: 0;
+margin: 0px;
+overflow: auto;
+}
+
+div {
+resize: horizontal;
+overflow: auto;
+width: 120px;
+height: 120px;
+margin: 5px;
+padding: 0px;
+border: 1px solid black;
+display:block;
+
+}
+
+td div {
+border: 0;
+width: auto;
+height: auto;
+min-height: 20px;
+min-width: 100px;
+}
+
+.header {
+    background-color: rgb(204,255,255);
+}
+.file_name {
+    background-color: rgb(204,255,255);
+}
+.exists {
+    background-color: rgb(153,255,204);
+}
+.differs {
+    background-color: rgb(255,255,204);
+}
+.missing {
+    background-color: rgb(204,153,204);
+}
+.compare_error {
+    background-color: rgb(255,0,0);
+}
+.empty {
+    background-color: rgb(153,153,153);
+}
+/* 
+FNAME:wx.Colour(204,255,255),
+#     EXISTS:wx.Colour(153,255,204),
+#     DIFFERS:wx.Colour(255,255,204),
+#     MISSING:wx.Colour(204,153,204),
+#     COMPERR:wx.Colour(255,0,0),
+#     EMPTY:wx.Colour(153,153,153),
+#     DEFAULT:wx.Colour(255,255,255) */
