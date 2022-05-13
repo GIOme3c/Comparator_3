@@ -16,6 +16,12 @@ COMPERR = 'compare_error'
 EMPTY = 'empty'
 # DEFAULT = 'default'
 
+TYPES = {
+    '- ':'deleted',
+    '+ ':'added',
+    '  ':'exists',
+}
+
 COLOUR = {
     HEADER:wx.Colour(204,204,255),
 #     FNAME:wx.Colour(204,255,255),

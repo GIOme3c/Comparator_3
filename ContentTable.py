@@ -82,6 +82,7 @@ class ContentTable():
 
     def ShowNewData(self):
         HTMLManager.setContentPage(self.toHTML())
+        HTMLManager.setData(self.new_json)
         self.browser.Reload()
 
     def path_control(self, path, rules):
@@ -134,6 +135,7 @@ class ContentTable():
 
     def toHTML(self):
         self.GetCurrentSettings()
+        self.new_json = {}
 
         column = "minmax(150px,1fr) "
         result = f'<table style = "display: grid; grid-template-columns: {column*len(self.table[0])};">\n'
@@ -162,6 +164,8 @@ class ContentTable():
 
         for cell in row:
             result += cell.toHTML(margin+1, head)
+            self.new_json.update(cell.toJSON()) 
+
         result += f'{t*margin}</tr>\n'
         if (head):
             margin-=1
@@ -213,6 +217,20 @@ class Cell():
             self.text = "The file has an unreadable type"
         elif self.type == CL.EMPTY:
             self.text = "The file is missing in both projects"    
+
+    def toJSON(self):
+        if self.text == None:
+            return {}
+        return_dict = {self.file : {"rows":[], "types":[]}}
+        if type(self.text) == str:
+            return_dict[self.file]["rows"].append(self.text.replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
+            return_dict[self.file]["types"].append(self.type)
+        else:
+            for line in self.text:
+                if (line[:2] != '? '):
+                    return_dict[self.file]["types"].append(CL.TYPES[line[:2]])
+                    return_dict[self.file]["rows"].append(line[2:].replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
+        return return_dict
 
     def toHTML(self,margin, head = False):
         t = '\t'

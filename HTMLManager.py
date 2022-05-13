@@ -1,4 +1,4 @@
-import os
+import os, json
 
 def END():
     if os.path.exists('content/content.html'):
@@ -10,10 +10,18 @@ def getTemplate():
     return text
 
 def rewriteContentPage(newPage):
-    if os.path.exists('content/content.html'):
-        os.remove('content/content.html')
-    with open('content/content.html', 'x', encoding='utf-8') as file:
+    content_path = 'content/content.html'
+    if os.path.exists(content_path):
+        os.remove(content_path)
+    with open(content_path, 'x', encoding='utf-8') as file:
         file.write(newPage)
+
+def setData(newJSON):
+    data_path = 'content/data.json'
+    if os.path.exists(data_path):
+        os.remove(data_path)
+    with open(data_path, 'x', encoding='utf-8') as file:
+        file.write('json = '+json.dumps(newJSON,separators=(',', ':')))
 
 def setStartPage():
     setContentPage('<h1>Compare some projects</h1>')
