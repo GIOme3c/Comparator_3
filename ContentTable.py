@@ -1,28 +1,34 @@
 
-import wx.html2
+import wx.html2, re, FileManager, HTMLManager
 import ConstantLib as CL
-import FileManager
-import HTMLManager
 
 class ContentTable():
     browser = None
     projects = {}
     compares = []
     files = []
-
-    cols = 1
-    raws = 0
-    table = [[]]
     
     def __init__(self) -> None:
-        self.table[0].append(Cell(
+        self.Refresh()
+    
+    def Refresh(self):
+        self.table = [[Cell(
             type = CL.HEADER,
             label = 'File path',
-        ))
-    
+        )]]
+        self.files = []
+        old_compares = list(self.compares)
+        self.compares = []
+
+        for compare in old_compares:
+            self.AddCompare(compare[0],compare[1])
+
     def CreateBrowser(self, parent):
         self.browser = wx.html2.WebView.New(parent = parent, backend = wx.html2.WebViewBackendEdge, url = CL.BASE_URL) 
         HTMLManager.setStartPage()
+        # wx.html2.WebView.RunScript()
+        # print(self.browser.RunScript())
+        # print(self.browser.RunScript("console.log(a);"))
         return self.browser
 
     def AddRow(self, file_name):
@@ -74,22 +80,73 @@ class ContentTable():
                 self.files.append(file)
                 self.AddRow(file)
 
+    def ShowNewData(self):
         HTMLManager.setContentPage(self.toHTML())
         self.browser.Reload()
 
+    def path_control(self, path, rules):
+        for rule in rules:
+            try:
+                compare_result = re.search(rule, path)
+            except:
+                continue
+            if (compare_result != None):
+                if (compare_result.group(0)!=''):
+                    return False
+        return True
+
+    def CheckAE(self, row):
+        all_exist = True
+        for cell in row[1:]:
+            if cell.type != CL.EXISTS:
+                all_exist = False
+                break
+        if all_exist == True and self.settings['AEC'] == False:
+            return False
+        else:
+            return True
+
+    def CheckCE(self, row):
+        compare_error = False
+        for cell in row[1:]:
+            if cell.type == CL.COMPERR:
+                compare_error = True
+                break
+        if compare_error == True and self.settings['CEC'] == False:
+            return False
+        else:
+            return True
+
+    def CheckBL(self, label):
+        if self.settings['BLC'] == False:
+            return True
+        else:
+            return self.path_control(label,self.settings['BL'])
+
+    def CheckWL(self, label):
+        if self.settings['WLC'] == False:
+            return True
+        else:
+            return not self.path_control(label,self.settings['WL'])
+    
+    def ShowRow(self, row):
+        return self.CheckAE(row) and self.CheckCE(row) and self.CheckBL(row[0].label) and self.CheckWL(row[0].label)
+
     def toHTML(self):
-        result = '<table>\n'
+        self.GetCurrentSettings()
+
+        column = "minmax(150px,1fr) "
+        result = f'<table style = "display: grid; grid-template-columns: {column*len(self.table[0])};">\n'
         result += self.RowToHTML(self.table[0], True)
 
         for row in self.table[1:]:
-            result += self.RowToHTML(row, False)
+            result += self.RowToHTML(row, show = self.ShowRow(row))
 
         result += '\t</table>\n'
 
         return result
 
-
-    def RowToHTML(self,row, head):
+    def RowToHTML(self,row, head = False, show = True):
         margin = 2
         t = '\t'
         if (head):
@@ -97,14 +154,28 @@ class ContentTable():
             margin += 1
         else:
             result = ''
-        result += f'{t*margin}<tr>\n'
+
+        if show:
+            result += f'{t*margin}<tr>\n'
+        else:
+            result += f'{t*margin}<tr hidden>\n'
+
         for cell in row:
-            result += cell.toHTML(margin+1)
+            result += cell.toHTML(margin+1, head)
         result += f'{t*margin}</tr>\n'
         if (head):
             margin-=1
             result += f'{t*margin}</thead>\n'
         return result
+
+    def GetCurrentSettings(self):
+        self.settings = {}
+        self.settings['WL'] = self.sPanel.white_list
+        self.settings['BL'] = self.sPanel.black_list
+        self.settings['WLC'] = self.sPanel.WL_check.GetValue()
+        self.settings['BLC'] = self.sPanel.BL_check.GetValue()
+        self.settings['AEC'] = self.sPanel.AE_check.GetValue()
+        self.settings['CEC'] = self.sPanel.CE_check.GetValue()
 
 class Cell():
     label = 'File path'
@@ -143,6 +214,9 @@ class Cell():
         elif self.type == CL.EMPTY:
             self.text = "The file is missing in both projects"    
 
-    def toHTML(self,margin):
+    def toHTML(self,margin, head = False):
         t = '\t'
-        return f"{t*margin}<td class = {self.type}>\n{t*(margin+1)}<div>{self.label}</div>\n{t*margin}</td>\n"
+        if head:
+            return f'{t*margin}<th data-type="text-long" class = {self.type}>{self.label} <span class="resize-handle"></span> </th>\n'
+        else:
+            return f'{t*margin}<td class = {self.type}>{self.label}</td>\n'

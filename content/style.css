@@ -1,40 +1,103 @@
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    /* IE10+ CSS styles go here */
+/* Code By Webdevtrick ( https://webdevtrick.com ) */
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 table {
+    min-width: 100vw;
+    width: auto;
+    -webkit-box-flex: 1;
+    flex: 1;
+    /* display: grid; */
     border-collapse: collapse;
-    border-spacing: 0px;
+    /* grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) */
+        /* minmax(150px, 1.67fr)
+        minmax(150px, 1.67fr)
+        minmax(150px, 3.33fr)
+        minmax(150px, 1.67fr)
+        minmax(150px, 3.33fr)
+        minmax(150px, 1.67fr); */
 }
+
+thead,
+tbody,
+tr {
+    display: contents;
+}
+
+th,
 td {
-border: 2px solid black;
-padding: 0;
-margin: 0px;
-overflow: auto;
+    padding: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-div {
-resize: horizontal;
-overflow: auto;
-width: 120px;
-height: 120px;
-margin: 5px;
-padding: 0px;
-border: 1px solid black;
-display:block;
-
+th {
+    border: 1px solid rgb(0, 0, 0);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background: #5cb85c;
+    text-align: left;
+    font-weight: normal;
+    font-size: 1.1rem;
+    color: white;
+    position: relative;
 }
 
-td div {
-border: 0;
-width: auto;
-height: auto;
-min-height: 20px;
-min-width: 100px;
+/* th:last-child {
+    border: 0;
+} */
+
+.resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    opacity: 0;
+    width: 10px;
+    cursor: col-resize;
 }
+
+.resize-handle:hover,
+.header--being-resized .resize-handle {
+    opacity: 0.5;
+}
+
+th:hover .resize-handle {
+    opacity: 0.3;
+}
+
+td {
+    border: 1px solid grey;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #0a0909;
+}
+
+/* tr:nth-child(even) td {
+    background: #f8f6ff;
+    opacity: 0.7;
+} */
 
 .header {
-    background-color: rgb(204,255,255);
+    background-color: rgb(69, 140, 231);
 }
 .file_name {
     background-color: rgb(204,255,255);
@@ -54,11 +117,3 @@ min-width: 100px;
 .empty {
     background-color: rgb(153,153,153);
 }
-/* 
-FNAME:wx.Colour(204,255,255),
-#     EXISTS:wx.Colour(153,255,204),
-#     DIFFERS:wx.Colour(255,255,204),
-#     MISSING:wx.Colour(204,153,204),
-#     COMPERR:wx.Colour(255,0,0),
-#     EMPTY:wx.Colour(153,153,153),
-#     DEFAULT:wx.Colour(255,255,255) */

@@ -1,0 +1,1 @@
+let json = "{ "file":{ "/.polarion/builder/descriptors.xml":{ "rows":[ "row1", "row2", "row3" ], "types":[ "exists", "differs", "missing" ] } } }";

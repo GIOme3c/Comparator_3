@@ -3,7 +3,6 @@ from wx import HORIZONTAL,VERTICAL
 from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
 from SelectList import SelectListWindow
-import FileManager
 
 
 class SettingsPanel(wx.Panel):
@@ -11,6 +10,7 @@ class SettingsPanel(wx.Panel):
         super().__init__(parent)
 
         self.content_table = content_table
+        content_table.sPanel = self
         
         self.log = self.GetParent().log
         settings_sizer = wx.BoxSizer(HORIZONTAL)
@@ -66,13 +66,16 @@ class SettingsPanel(wx.Panel):
             (refresh_button),
         ])
 
-        # self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)
+        self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
         self.Bind(wx.EVT_BUTTON, self.onAddCButtonClicked, addC_button)
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
-        # self.Bind(wx.EVT_CHECKBOX, self.update_grid)
+        self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
 
+    def onRefreshClick(self,event):
+        self.content_table.Refresh()
+        self.content_table.ShowNewData()
 
     def onEditWLClick(self, event):
         newWindow = SelectListWindow(
@@ -118,6 +121,7 @@ class SettingsPanel(wx.Panel):
             main_select = add_compare_window.main_select
             sub_select = add_compare_window.sub_select
             self.content_table.AddCompare(main_select, sub_select)
+            self.content_table.ShowNewData()
         else:
             print("ACB None")
         add_compare_window.Destroy()
