@@ -7,9 +7,31 @@ const columnTypeToRatioMap = {
   'text-long': 3.33 };
 
 
-const table = document.querySelector('table');
+const table = document.getElementById('main_table');
+// HandMade
+table.addEventListener('click', onTrClick)
 
-                                          
+function onTrClick(e){
+  console.log(e);
+  console.log(e.target);
+  console.log(e.target.parentElement)
+  let a = e.target.parentElement.cells
+  console.log(a);
+  let b = e.target;
+  b.innerHTML+=`<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
+                <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
+                <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+                <div></div><div><pre></pre></div>
+              </div>`;
+
+}
+//                                        
 const columns = [];
 let headerBeingResized;
 
@@ -73,6 +95,3 @@ document.querySelectorAll('th').forEach(header => {
 
   header.querySelector('.resize-handle').addEventListener('mousedown', initResize);
 });
-
-console.log(json)
-pj = JSON.parse(json)

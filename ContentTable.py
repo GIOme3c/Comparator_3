@@ -138,7 +138,7 @@ class ContentTable():
         self.new_json = {}
 
         column = "minmax(150px,1fr) "
-        result = f'<table style = "display: grid; grid-template-columns: {column*len(self.table[0])};">\n'
+        result = f'<table id="main_table" style = "display: grid; grid-template-columns: {column*len(self.table[0])};">\n'
         result += self.RowToHTML(self.table[0], True)
 
         for row in self.table[1:]:
