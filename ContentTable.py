@@ -256,4 +256,4 @@ class Cell():
         if head:
             return f'{t*margin}<th data-type="text-long" id="{self.uid}" class = {self.type}>{self.label} <span class="resize-handle"></span> </th>\n'
         else:
-            return f'{t*margin}<td id="{self.uid}" class = {self.type}>{self.label}</td>\n'
+            return f'{t*margin}<td code="{self.uid}" class = {self.type}>{self.label}</td>\n'

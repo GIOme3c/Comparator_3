@@ -18,17 +18,21 @@ function onTrClick(e){
   let a = e.target.parentElement.cells
   console.log(a);
   let b = e.target;
-  b.innerHTML+=`<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
-                <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
-                <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-                <div></div><div><pre></pre></div>
-              </div>`;
+  if (e.target.hasAttribute('code'))
+  {
+    b.innerHTML+=`<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
+    <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
+    <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    <div></div><div><pre></pre></div>
+    </div>`;
+  }
+  
 
 }
 //                                        
