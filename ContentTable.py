@@ -7,14 +7,21 @@ class ContentTable():
     projects = {}
     compares = []
     files = []
+    last_id = -1
     
+    def GetID(self):
+        self.last_id+=1
+        return self.last_id
+
     def __init__(self) -> None:
         self.Refresh()
     
     def Refresh(self):
+        self.last_id = -1
         self.table = [[Cell(
             type = CL.HEADER,
             label = 'File path',
+            uid = self.GetID(),
         )]]
         self.files = []
         old_compares = list(self.compares)
@@ -35,6 +42,7 @@ class ContentTable():
         self.table.append([Cell(
             type = CL.FNAME,
             label = file_name,
+            uid = self.GetID(),
         )])
         
         for compare in self.compares:
@@ -44,6 +52,7 @@ class ContentTable():
             self.table[-1].append(Cell(
                 compare = (main_project,sub_project),
                 file = file_name,
+                uid = self.GetID(),
             ))
 
     def AddCol(self, compare):
@@ -51,6 +60,7 @@ class ContentTable():
         self.table[0].append(Cell(
             label = compare_name,
             type = CL.HEADER,
+            uid = self.GetID(),
         ))
 
         main_project = self.projects[compare[0]]
@@ -59,6 +69,7 @@ class ContentTable():
             row.append(Cell(
                 compare = (main_project,sub_project),
                 file = row[0].label,
+                uid = self.GetID(),
             ))
 
     def AddProject(self,pName,pPath):
@@ -185,12 +196,14 @@ class Cell():
     label = 'File path'
     type = CL.HEADER
     text = None
+    uid = None
 
-    def __init__(self, label = None, type = None, compare = None, file = None) -> None:
-        self.label = label
+    def __init__(self, label = None, type = None, compare = None, file = None, uid = None) -> None:
+        self.label = label  
         self.type = type
         self.file = file
         self.compare = compare
+        self.uid = uid
 
         if type != None:
             return
@@ -218,23 +231,29 @@ class Cell():
         elif self.type == CL.EMPTY:
             self.text = "The file is missing in both projects"    
 
+    # def strip(self, str):
+    #     if (str[-1] == '\n'):
+    #         return str[:-1]
+
     def toJSON(self):
         if self.text == None:
             return {}
-        return_dict = {self.file : {"rows":[], "types":[]}}
+        return_dict = {self.uid : {"rows":[], "types":[]}}
         if type(self.text) == str:
-            return_dict[self.file]["rows"].append(self.text.replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
-            return_dict[self.file]["types"].append(self.type)
+            # self.text = self.strip(self.text)
+            return_dict[self.uid]["rows"].append(self.text.replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
+            return_dict[self.uid]["types"].append(self.type)
         else:
             for line in self.text:
                 if (line[:2] != '? '):
-                    return_dict[self.file]["types"].append(CL.TYPES[line[:2]])
-                    return_dict[self.file]["rows"].append(line[2:].replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
+                    # line = self.strip(line)
+                    return_dict[self.uid]["types"].append(CL.TYPES[line[:2]])
+                    return_dict[self.uid]["rows"].append(line[2:].replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
         return return_dict
 
     def toHTML(self,margin, head = False):
         t = '\t'
         if head:
-            return f'{t*margin}<th data-type="text-long" class = {self.type}>{self.label} <span class="resize-handle"></span> </th>\n'
+            return f'{t*margin}<th data-type="text-long" id="{self.uid}" class = {self.type}>{self.label} <span class="resize-handle"></span> </th>\n'
         else:
-            return f'{t*margin}<td class = {self.type}>{self.label}</td>\n'
+            return f'{t*margin}<td id="{self.uid}" class = {self.type}>{self.label}</td>\n'
