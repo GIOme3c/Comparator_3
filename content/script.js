@@ -77,81 +77,50 @@ document.querySelectorAll('th').forEach(header => {
 // HandMade
 table.addEventListener('click', onTrClick)
 
-function getTextDiv(){
-  return `<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
-  <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
-  <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  <div></div><div><pre></pre></div>
-  </div>`;
-}
+function getTextDiv(code){
+  // return `<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
+  // <div><input type="checkbox"></div><div><pre style="margin:0">${code}</pre></div>
+  // <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // <div></div><div><pre></pre></div>
+  // </div>`;
+  let strs = json[code]["rows"]
+  let tps = json[code]["types"]
+  ret_str = '<div style="display:grid; grid: 1fr 1fr/1fr 1fr">'
+  for (let i = 0; i<strs.length; i++)
+    ret_str += `<div><input type="checkbox"></div><div class = "${tps[i]}"><pre style="margin:0">${strs[i]}</pre></div>`
+  console.log(strs)
+  console.log(tps)
+  ret_str += '</div>'
 
-// function show_hide_div(element){
-//   if (element.hasAttribute('code')){
-//     let parent = element.parentElement
-//     if (!parent.hasAttribute("isExpand")){
-//       parent.setAttribute("isExpand",'')
-//       if (!parent.hasAttribute("isFill")){
-//         element.innerHTML+= getTextDiv()
-//         parent.setAttribute("isFill",'')
-//       }
-//       else{
-//         child = element.children[0]
-//         child.removeAttribute("hidden")
-//       }
-//     }
-//     else{
-//       parent.removeAttribute("isExpand")
-//       child = element.children[0]
-//       child.setAttribute("hidden",'')
-//       console.log(element)
-//     } 
-//   }
-// }
+  return ret_str;  
+}
 
 function onTrClick(e){
-  // console.log(e);
-  // console.log(e.target);
-  // console.log(e.target.parentElement)
-  // console.log(a);
   let element = e.target;
-  let cells = element.parentElement.cells
-  // for (cel in cells) {
 
-  // } 
   if (element.hasAttribute('code')){
-    let parent = element.parentElement
-    if (!parent.hasAttribute("isExpand")){
-      parent.setAttribute("isExpand",'')
-      if (!parent.hasAttribute("isFill")){
-        // for (cel in cells){cel.innerHTML+= getTextDiv()}
-        element.innerHTML+= getTextDiv()
-        parent.setAttribute("isFill",'')
-      }
-      else{
-        // for (cel in cells){
-        //   child = cel.children[0]
-        //   child.removeAttribute("hidden")
-        // }
-        child = element.children[0]
-        child.removeAttribute("hidden")
-      }
+    let row = element.parentElement
+    let cells = row.cells
+
+    console.log(cells)
+
+    if (!row.hasAttribute("isExpand")){
+      for (let i = 1; i<cells.length; i++){console.log(cells[i]); cells[i].innerHTML+= getTextDiv(cells[i].getAttribute("code"));}
+      row.setAttribute("isExpand",'True')
     }
-    else{
-      parent.removeAttribute("isExpand")
-      // for (cel in cells){
-      // child = cel.children[0]
-      // child.setAttribute("hidden",'')
-      // }
-      child = element.children[0]
-      child.setAttribute("hidden",'')
-      // console.log(element)
-    } 
+    else if (row.getAttribute("isExpand") == "True"){
+      for (let i = 1; i<cells.length; i++){cells[i].children[0].setAttribute("hidden",'')}
+      row.setAttribute("isExpand",'False')
+    }
+    else if (row.getAttribute("isExpand") == "False"){
+      for (let i = 1; i<cells.length; i++){cells[i].children[0].removeAttribute("hidden")}
+      row.setAttribute("isExpand",'True')
+    }
   }
 }
-//
