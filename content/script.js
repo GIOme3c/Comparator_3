@@ -8,34 +8,7 @@ const columnTypeToRatioMap = {
 
 
 const table = document.getElementById('main_table');
-// HandMade
-table.addEventListener('click', onTrClick)
-
-function onTrClick(e){
-  console.log(e);
-  console.log(e.target);
-  console.log(e.target.parentElement)
-  let a = e.target.parentElement.cells
-  console.log(a);
-  let b = e.target;
-  if (e.target.hasAttribute('code'))
-  {
-    b.innerHTML+=`<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
-    <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
-    <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    <div></div><div><pre></pre></div>
-    </div>`;
-  }
-  
-
-}
-//                                        
+                                        
 const columns = [];
 let headerBeingResized;
 
@@ -99,3 +72,86 @@ document.querySelectorAll('th').forEach(header => {
 
   header.querySelector('.resize-handle').addEventListener('mousedown', initResize);
 });
+
+
+// HandMade
+table.addEventListener('click', onTrClick)
+
+function getTextDiv(){
+  return `<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
+  <div><input type="checkbox"></div><div><pre style="margin:0">Zxcvbnm          dfgv       dfgh</pre></div>
+  <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  <div></div><div><pre></pre></div>
+  </div>`;
+}
+
+// function show_hide_div(element){
+//   if (element.hasAttribute('code')){
+//     let parent = element.parentElement
+//     if (!parent.hasAttribute("isExpand")){
+//       parent.setAttribute("isExpand",'')
+//       if (!parent.hasAttribute("isFill")){
+//         element.innerHTML+= getTextDiv()
+//         parent.setAttribute("isFill",'')
+//       }
+//       else{
+//         child = element.children[0]
+//         child.removeAttribute("hidden")
+//       }
+//     }
+//     else{
+//       parent.removeAttribute("isExpand")
+//       child = element.children[0]
+//       child.setAttribute("hidden",'')
+//       console.log(element)
+//     } 
+//   }
+// }
+
+function onTrClick(e){
+  // console.log(e);
+  // console.log(e.target);
+  // console.log(e.target.parentElement)
+  // console.log(a);
+  let element = e.target;
+  let cells = element.parentElement.cells
+  // for (cel in cells) {
+
+  // } 
+  if (element.hasAttribute('code')){
+    let parent = element.parentElement
+    if (!parent.hasAttribute("isExpand")){
+      parent.setAttribute("isExpand",'')
+      if (!parent.hasAttribute("isFill")){
+        // for (cel in cells){cel.innerHTML+= getTextDiv()}
+        element.innerHTML+= getTextDiv()
+        parent.setAttribute("isFill",'')
+      }
+      else{
+        // for (cel in cells){
+        //   child = cel.children[0]
+        //   child.removeAttribute("hidden")
+        // }
+        child = element.children[0]
+        child.removeAttribute("hidden")
+      }
+    }
+    else{
+      parent.removeAttribute("isExpand")
+      // for (cel in cells){
+      // child = cel.children[0]
+      // child.setAttribute("hidden",'')
+      // }
+      child = element.children[0]
+      child.setAttribute("hidden",'')
+      // console.log(element)
+    } 
+  }
+}
+//
