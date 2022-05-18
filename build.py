@@ -1,2 +1,2 @@
 import os
-os.system("pyinstaller -F -w Launch_Comparator.py")
+os.system("pyinstaller -F -w MainWindow.py")
