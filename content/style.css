@@ -33,6 +33,11 @@ table {
         minmax(150px, 1.67fr); */
 }
 
+thead {
+    position: sticky;
+    top: 0;
+}
+
 thead,
 tbody,
 tr {
@@ -57,7 +62,7 @@ th {
     font-weight: normal;
     font-size: 1.1rem;
     color: white;
-    position: relative;
+    /* position: relative; */
 }
 
 /* th:last-child {
