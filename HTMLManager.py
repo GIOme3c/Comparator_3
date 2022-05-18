@@ -3,6 +3,8 @@ import os, json
 def END():
     if os.path.exists('content/content.html'):
         os.remove('content/content.html')
+    if os.path.exists('content/data.json'):
+        os.remove('content/data.json')
 
 def getTemplate():
     with open('content/template.html', 'r', encoding='utf-8') as file:

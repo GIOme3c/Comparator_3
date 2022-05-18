@@ -2,7 +2,7 @@
 ########################################ENGLISH#################################
 Q1 - How i can launch Comparator?
 A1 - Double click on *.exe file in "dict" folder. if *.exe file or "dict" folder not exists download actual python version -> run terminal(ctrl+r -> write "cmd" -> press "enter") -> write:
-"comparator_venv\Scripts\activate
+"venv\Scripts\activate
 python build.py". 
 try again
 *For Linux and MacOS users - check Q4
@@ -24,12 +24,12 @@ A3 - Examples:
     Test your regular expression - https://regex101.com/r/vhuHtH/1
         
 Q4 - How i can run not compile version of programm?
-A4 - Download actual python version -> run terminal -> write "comparator_venv/Scripts/activate" -> write python Launch_Comparator.py.
+A4 - Download actual python version -> run terminal -> write "venv/Scripts/activate" -> write python Launch_Comparator.py.
 
 ########################################РУССКИЙ#################################
 Q1 - Как я могу запустить Comparator?
 A1 - Дважды щелкните по файлу *.exe в папке "dict". если файл *.exe или папка "dict" не существуют, загрузите актуальную версию python -> запустите терминал (ctrl+r -> напишите "cmd" -> нажмите "enter") -> напишите:
-"comparator_venv\Scripts\activate
+"venv\Scripts\activate
 python build.py".
 *Для пользователей Linux и macOS - смотреть Q4
 
@@ -50,4 +50,4 @@ Black list "^/text/.+" - скрывает все файлы, содержащи�
 Проверьте свое регулярное выражение - https://regex101.com/r/vhuHtH/1
 
 Q4 - Как я могу запустить не скомпилированную версию программы?
-A4 - Загрузить актуальную версию python -> запустить терминал -> написать "comparator_venv/Scripts/activate" -> написать python Launch_Comparator.py .
+A4 - Загрузить актуальную версию python -> запустить терминал -> написать "venv/Scripts/activate" -> написать python Launch_Comparator.py .
