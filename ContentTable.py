@@ -241,14 +241,15 @@ class Cell():
         return_dict = {self.uid : {"rows":[], "types":[]}}
         if type(self.text) == str:
             # self.text = self.strip(self.text)
-            return_dict[self.uid]["rows"].append(self.text.replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
-            return_dict[self.uid]["types"].append(self.type)
+            # print(self.file)
+            return_dict[self.uid]["rows"].append(self.text.replace('<','&lt').replace('>','&gt').replace('\n','<br>'))
+            return_dict[self.uid]["types"].append(CL.TYPES[self.type])
         else:
             for line in self.text:
                 if (line[:2] != '? '):
                     # line = self.strip(line)
                     return_dict[self.uid]["types"].append(CL.TYPES[line[:2]])
-                    return_dict[self.uid]["rows"].append(line[2:].replace('\t','&nbsp;&nbsp;&nbsp;&nbsp').replace('\n','<br>'))
+                    return_dict[self.uid]["rows"].append(line[2:].replace('<','&lt').replace('>','&gt'))
         return return_dict
 
     def toHTML(self,margin, head = False):

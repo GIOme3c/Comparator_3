@@ -3,6 +3,7 @@ from wx import HORIZONTAL,VERTICAL
 from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
 from SelectList import SelectListWindow
+from ImportWindow import ImportWindow
 
 
 class SettingsPanel(wx.Panel):
@@ -38,6 +39,10 @@ class SettingsPanel(wx.Panel):
             self,
             label = "Refresh data",
         )
+        import_button = wx.Button(
+            self,
+            label = "Import HTML",
+        )
         WL_check = self.WL_check = wx.CheckBox(
             self,
             label = "White list",
@@ -64,14 +69,20 @@ class SettingsPanel(wx.Panel):
             (AE_check,0,wx.TOP,3),
             (CE_check,0,wx.TOP,3),
             (refresh_button),
+            (import_button),
         ])
 
         self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)
+        self.Bind(wx.EVT_BUTTON, self.onImportClick, import_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
         self.Bind(wx.EVT_BUTTON, self.onAddCButtonClicked, addC_button)
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
+
+    def onImportClick(self,event):
+        new_window = ImportWindow(self)
+        new_window.ShowModal()
 
     def onRefreshClick(self,event):
         self.content_table.Refresh()

@@ -17,9 +17,14 @@ EMPTY = 'empty'
 # DEFAULT = 'default'
 
 TYPES = {
-    '- ':'deleted',
-    '+ ':'added',
-    '  ':'exists',
+    '- ':'drow',
+    '+ ':'arow',
+    '  ':'row',
+    EXISTS:'row',
+    DIFFERS:'arow',
+    MISSING:'drow',
+    COMPERR:'compare_error',
+    EMPTY:'empty',
 }
 
 COLOUR = {

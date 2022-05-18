@@ -117,3 +117,12 @@ td {
 .empty {
     background-color: rgb(153,153,153);
 }
+.row {
+    background-color: rgb(200,200,200);
+}
+.arow {
+    background-color: rgb(193,255,224);
+}
+.drow {
+    background-color: rgb(255,204,204);
+}
