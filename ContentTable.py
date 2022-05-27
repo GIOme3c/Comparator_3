@@ -32,7 +32,15 @@ class ContentTable():
 
     def CreateBrowser(self, parent):
         self.browser = wx.html2.WebView.New(parent = parent, backend = wx.html2.WebViewBackendEdge, url = CL.BASE_URL) 
-        print(self.browser.IsBackendAvailable(wx.html2.WebViewBackendEdge))
+        # try:
+        #     print(self.browser.IsBackendAvailable(wx.html2.WebViewBackendEdge))
+        # except:
+        #     print("self.browser.IsBackendAvailable")
+        # try:
+        #     print(wx.html2.WebView.IsBackendAvailable(wx.html2.WebViewBackendEdge))
+        # except:
+        #     print("wx.html2.WebView.IsBackendAvailable")
+
         HTMLManager.setStartPage()
         # wx.html2.WebView.RunScript()
         # print(self.browser.RunScript())

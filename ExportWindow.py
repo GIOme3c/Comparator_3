@@ -1,9 +1,9 @@
 import wx, os, shutil
 from wx import HORIZONTAL,VERTICAL
 
-class ImportWindow(wx.Dialog):
+class ExportWindow(wx.Dialog):
     def __init__(self, parent) -> None:
-        super().__init__(parent, title = "Import")
+        super().__init__(parent, title = "Export")
 
         dirpick_text = wx.StaticText(
             self,
@@ -16,16 +16,16 @@ class ImportWindow(wx.Dialog):
             self,
             label = "Write name of ipmort folder",
         )
-        import_folder_name = self.import_folder_name = wx.TextCtrl(
+        export_folder_name = self.export_folder_name = wx.TextCtrl(
             self,
-            value = "New import",
+            value = "New export",
         )
-        import_button = wx.Button(
+        export_button = wx.Button(
             self,
-            label = "import",
+            label = "export",
         )
-        cur_size = import_button.GetSize()
-        import_button.SetMinSize((cur_size[0]*1.4,cur_size[1]*1.4))
+        cur_size = export_button.GetSize()
+        export_button.SetMinSize((cur_size[0]*1.4,cur_size[1]*1.4))
 
         main_sizer = wx.BoxSizer(VERTICAL)
         self.SetSizer(main_sizer)
@@ -33,15 +33,15 @@ class ImportWindow(wx.Dialog):
             (dirpick_text,0,wx.ALIGN_CENTER | wx.TOP,20),
             (select_dir,0,wx.ALIGN_CENTER,10),
             (folder_name_text,0,wx.ALIGN_CENTER | wx.TOP,25),
-            (import_folder_name,0,wx.ALIGN_CENTER,10),
-            (import_button,0,wx.ALIGN_CENTER| wx.TOP,30),
+            (export_folder_name,0,wx.ALIGN_CENTER,10),
+            (export_button,0,wx.ALIGN_CENTER| wx.TOP,30),
         ])
 
-        import_button.Bind(wx.EVT_BUTTON, self.onImportClick)
+        export_button.Bind(wx.EVT_BUTTON, self.onExportClick)
 
-    def onImportClick(self, event):
+    def onExportClick(self, event):
         root_dir = self.select_dir.GetPath()
-        new_folder_path =root_dir +'\\'+ self.import_folder_name.GetValue()
+        new_folder_path =root_dir +'\\'+ self.export_folder_name.GetValue()
         if os.path.isdir(root_dir):
             if os.path.isdir(new_folder_path):
                 pass #Exist now

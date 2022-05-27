@@ -3,7 +3,7 @@ from wx import HORIZONTAL,VERTICAL
 from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
 from SelectList import SelectListWindow
-from ImportWindow import ImportWindow
+from ExportWindow import ExportWindow
 
 
 class SettingsPanel(wx.Panel):
@@ -41,7 +41,7 @@ class SettingsPanel(wx.Panel):
         )
         import_button = wx.Button(
             self,
-            label = "Import HTML",
+            label = "Export HTML",
         )
         WL_check = self.WL_check = wx.CheckBox(
             self,
@@ -73,15 +73,15 @@ class SettingsPanel(wx.Panel):
         ])
 
         self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)
-        self.Bind(wx.EVT_BUTTON, self.onImportClick, import_button)
+        self.Bind(wx.EVT_BUTTON, self.onExportClick, import_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
         self.Bind(wx.EVT_BUTTON, self.onAddCButtonClicked, addC_button)
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
 
-    def onImportClick(self,event):
-        new_window = ImportWindow(self)
+    def onExportClick(self,event):
+        new_window = ExportWindow(self)
         new_window.ShowModal()
 
     def onRefreshClick(self,event):
@@ -110,17 +110,18 @@ class SettingsPanel(wx.Panel):
         else:
             print("EBL None")
 
-    def onAddPButtonClicked(self, event): ##Need to rewrite!
+    def onAddPButtonClicked(self, event):
         add_project_window = AddProjectWindow(
             self,
             self.content_table.projects,
         )
-        if add_project_window.ShowModal():
-            path = add_project_window.path
-            name = add_project_window.name
-            self.content_table.AddProject(name,path)
-        else:
-            print("APB None")
+        # if add_project_window.ShowModal():
+        #     path = add_project_window.path
+        #     name = add_project_window.name
+        #     self.content_table.AddProject(name,path)
+        # else:
+        #     print("APB None")
+        add_project_window.ShowModal()
         add_project_window.Destroy()
 
     def onAddCButtonClicked(self, event): ##Need to rewrite!

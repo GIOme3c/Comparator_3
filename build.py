@@ -1,6 +1,6 @@
 from cx_Freeze import setup, Executable
 
-executables = [Executable('MainWindow.py', targetName='Comparator.exe')]
+executables = [Executable('MainWindow.py', targetName='Comparator.exe', base="Win32GUI")]
 
 excludes = ['unicodedata', 'logging', 'unittest', 'email', 'html', 'http', 'urllib',
             'xml', 'pydoc', 'doctest', 'argparse', 'datetime', 'zipfile',
@@ -16,12 +16,12 @@ options = {
         'include_msvcr': True,
         # 'excludes': excludes,
         'zip_include_packages': zip_include_packages,
-        'build_exe': 'build_windows',
+        'build_exe': 'Comparator',
     }
 }
 
 setup(name='Comparator',
-      version='3.0.1',
+      version='3.1.1',
       description='',
       executables=executables,
       options=options)

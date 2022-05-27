@@ -1,12 +1,12 @@
-import wx
+import wx, os
 from wx import HORIZONTAL,VERTICAL
 import ConstantLib as CL
 
 class ListPanel(wx.Panel):
-    def __init__(self, parent, projects):
+    def __init__(self, parent):
         super().__init__(parent = parent)
 
-        panel_sizer = wx.FlexGridSizer(cols = 2, vgap = 3, hgap = 5)
+        panel_sizer = self.panel_sizer = wx.FlexGridSizer(cols = 2, vgap = 3, hgap = 5)
         self.SetSizer(panel_sizer)
 
         STNameHeader = wx.StaticText(
@@ -22,17 +22,30 @@ class ListPanel(wx.Panel):
         panel_sizer.Add(STNameHeader, 0, wx.EXPAND | wx.LEFT, 5)
         panel_sizer.Add(STPathHeader, 0, wx.EXPAND | wx.LEFT, 5)
 
-        for name in projects:
+        for name in parent.projects:
             STName = wx.StaticText(
                 self,
                 label = name,
             )
             STPath = wx.StaticText(
                 self,
-                label = projects[name],
+                label = parent.projects[name],
             )
             panel_sizer.Add(STName, 0, wx.EXPAND | wx.LEFT, 5)
             panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
+    
+    def addProject(self,name,path):
+        STName = wx.StaticText(
+            self,
+            label = name,
+        )
+        STPath = wx.StaticText(
+            self,
+            label = path,
+        )
+        self.panel_sizer.Add(STName, 0, wx.EXPAND | wx.LEFT, 5)
+        self.panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
+        self.GetParent().Layout()
 
 class MainPanel(wx.Panel):
     def __init__(self, *args, **kw):
@@ -55,9 +68,9 @@ class MainPanel(wx.Panel):
         name_as_field = self.name_as = wx.TextCtrl(
             self,
         )
-        ok_button = wx.Button(
+        add_button = wx.Button(
             self,
-            label = "OK",
+            label = "Add",
         )
         cancel_button = wx.Button(
             self,
@@ -69,7 +82,7 @@ class MainPanel(wx.Panel):
             (name_as_field,0,wx.LEFT,5),
         ])
         close_button_sizer.AddMany([
-            (ok_button,0,wx.RIGHT,25),
+            (add_button,0,wx.RIGHT,25),
             (cancel_button,0,wx.LEFT,25),
         ])
         panel_sizer.AddMany([
@@ -79,14 +92,19 @@ class MainPanel(wx.Panel):
         ])
 
         select_dir.Bind(wx.EVT_DIRPICKER_CHANGED, self.onSelect)
-        ok_button.Bind(wx.EVT_BUTTON, self.onOK)
+        add_button.Bind(wx.EVT_BUTTON, self.onAdd)
         cancel_button.Bind(wx.EVT_BUTTON, self.onCancel)
 
-    def onOK(self,event):
+    def onAdd(self,event):
         parent = self.GetParent()
+        grand = parent.GetParent()
         parent.name = self.name_as.GetValue()
-        parent.retCode = 1
-        parent.Close()
+
+        if os.path.isdir(parent.path):
+            grand.content_table.AddProject(parent.name,parent.path)
+            parent.lPanel.addProject(parent.name,parent.path)
+        # parent.retCode = 1
+        # parent.Close()
 
     def onCancel(self,event):
         parent = self.GetParent()
@@ -101,21 +119,24 @@ class MainPanel(wx.Panel):
         self.name_as.SetLabel(auto_name)
         parent.name = auto_name
 
-class MainSizer(wx.BoxSizer):
-    def __init__(self, parent, projects):
-        super().__init__(VERTICAL)
-
-        self.Add(MainPanel(parent), 1, wx.EXPAND, 5)
-        self.Add(ListPanel(parent, projects), 2, wx.EXPAND, 5)
-
 class AddProjectWindow(wx.Dialog):
     def __init__(self, parent, projects):
         super().__init__(parent, title = "Select project", size = (500, 600))
 
+        self.projects = projects
+
         self.path = "None"
         self.name = ""
         self.retCode = 0
-        self.SetSizer(MainSizer(self,projects))
+        main_sizer = wx.BoxSizer(VERTICAL)
+        self.SetSizer(main_sizer)
+
+        self.mPanel = MainPanel(self)
+        self.lPanel = ListPanel(self)
+
+        main_sizer.Add(self.mPanel, 1, wx.EXPAND, 5)
+        main_sizer.Add(self.lPanel, 2, wx.EXPAND, 5)
+
         self.Layout()
 
         self.Bind(wx.EVT_CLOSE, self.onClose)
