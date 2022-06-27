@@ -1,8 +1,11 @@
 import wx
 from wx import HORIZONTAL,VERTICAL
 from ConstantLib import HSIZE,VSIZE
+from debug import timer
+
 
 class SelectListWindow(wx.Dialog):
+    @timer
     def __init__(self, parent, title, cList):
         super().__init__(parent = parent, title = title, size = (int(HSIZE()/3),int(VSIZE()/2)))
 
@@ -57,11 +60,13 @@ class SelectListWindow(wx.Dialog):
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.initEditPanel(cList)
 
+    @timer
     def initEditPanel(self, cList):
         self.rList = cList
         for el in cList:
             self.edit_field.AppendText(el+'\n')
     
+    @timer
     def onSelect(self,event):
         path = event.GetPath()
         text = ""
@@ -69,18 +74,22 @@ class SelectListWindow(wx.Dialog):
             text = file.read()
         self.edit_field.SetValue(text)
     
+    @timer
     def onOK(self,event):
         self.rList = self.StrToList(self.edit_field.GetValue())
         self.retCode = 1
         self.Close()
 
+    @timer
     def onCancel(self,event):
         self.retCode = 0
         self.Close()
 
+    @timer
     def onClose(self, event):
         self.EndModal(self.retCode)
         
+    @timer
     def StrToList(self, someStr):
         someList = someStr.split('\n')
         i = 0

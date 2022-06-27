@@ -1,8 +1,10 @@
 import wx
+from debug import timer
 from wx import HORIZONTAL,VERTICAL
 import ConstantLib as CL
 
 class MainPanel(wx.Panel):
+    @timer
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
@@ -72,20 +74,24 @@ class MainPanel(wx.Panel):
         ok_button.Bind(wx.EVT_BUTTON, self.onOK)
         cancel_button.Bind(wx.EVT_BUTTON, self.onCancel)
 
+    @timer
     def onOK(self,event):
         parent = self.GetParent()
         parent.retCode = 1
         parent.Close()
 
+    @timer
     def onCancel(self,event):
         parent = self.GetParent()
         parent.retCode = 0
         parent.Close()
 
+    @timer
     def onChoiceMain(self,event):
         parent = self.GetParent()
         parent.main_select = event.GetString()
-    
+
+    @timer  
     def onChoiceSub(self,event):
         parent = self.GetParent()
         parent.sub_select = event.GetString()

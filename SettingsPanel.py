@@ -4,9 +4,12 @@ from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
 from SelectList import SelectListWindow
 from ExportWindow import ExportWindow
+from debug import timer
+
 
 
 class SettingsPanel(wx.Panel):
+    @timer
     def __init__(self, parent, content_table):
         super().__init__(parent)
 
@@ -80,14 +83,17 @@ class SettingsPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
 
+    @timer
     def onExportClick(self,event):
         new_window = ExportWindow(self)
         new_window.ShowModal()
 
+    @timer
     def onRefreshClick(self,event):
         self.content_table.Refresh()
         self.content_table.ShowNewData()
 
+    @timer
     def onEditWLClick(self, event):
         newWindow = SelectListWindow(
             self,
@@ -99,6 +105,7 @@ class SettingsPanel(wx.Panel):
         else:
             print("EWL None")
 
+    @timer
     def onEditBLClick(self, event):
         newWindow = SelectListWindow(
             self,
@@ -110,6 +117,7 @@ class SettingsPanel(wx.Panel):
         else:
             print("EBL None")
 
+    @timer
     def onAddPButtonClicked(self, event):
         add_project_window = AddProjectWindow(
             self,
@@ -124,6 +132,7 @@ class SettingsPanel(wx.Panel):
         add_project_window.ShowModal()
         add_project_window.Destroy()
 
+    @timer
     def onAddCButtonClicked(self, event): ##Need to rewrite!
         add_compare_window = AddCompareWindow(
             self,

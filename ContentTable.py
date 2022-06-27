@@ -1,6 +1,8 @@
 
 import wx.html2, re, FileManager, HTMLManager
 import ConstantLib as CL
+from debug import timer
+
 
 class ContentTable():
     browser = None
@@ -9,13 +11,16 @@ class ContentTable():
     files = []
     last_id = -1
     
+    @timer
     def GetID(self):
         self.last_id+=1
         return self.last_id
 
+    @timer
     def __init__(self) -> None:
         self.Refresh()
     
+    @timer
     def Refresh(self):
         self.last_id = -1
         self.table = [[Cell(
@@ -30,6 +35,7 @@ class ContentTable():
         for compare in old_compares:
             self.AddCompare(compare[0],compare[1])
 
+    @timer
     def CreateBrowser(self, parent):
         self.browser = wx.html2.WebView.New(parent = parent, backend = wx.html2.WebViewBackendEdge, url = CL.BASE_URL) 
         # try:
@@ -47,6 +53,7 @@ class ContentTable():
         # print(self.browser.RunScript("console.log(a);"))
         return self.browser
 
+    @timer
     def AddRow(self, file_name):
         self.table.append([Cell(
             type = CL.FNAME,
@@ -64,6 +71,7 @@ class ContentTable():
                 uid = self.GetID(),
             ))
 
+    @timer
     def AddCol(self, compare):
         compare_name = compare[0]+' && '+compare[1]
         self.table[0].append(Cell(
@@ -81,9 +89,11 @@ class ContentTable():
                 uid = self.GetID(),
             ))
 
+    @timer
     def AddProject(self,pName,pPath):
         self.projects[pName] = pPath
 
+    @timer
     def AddCompare(self, mainS, subS): 
         compare = (mainS,subS)
         if compare in self.compares:
@@ -100,11 +110,13 @@ class ContentTable():
                 self.files.append(file)
                 self.AddRow(file)
 
+    @timer
     def ShowNewData(self):
         HTMLManager.setContentPage(self.toHTML())
         HTMLManager.setData(self.new_json)
         self.browser.Reload()
 
+    @timer
     def path_control(self, path, rules):
         for rule in rules:
             try:
@@ -116,6 +128,7 @@ class ContentTable():
                     return False
         return True
 
+    @timer
     def CheckAE(self, row):
         all_exist = True
         for cell in row[1:]:
@@ -127,6 +140,7 @@ class ContentTable():
         else:
             return True
 
+    @timer
     def CheckCE(self, row):
         compare_error = False
         for cell in row[1:]:
@@ -138,21 +152,25 @@ class ContentTable():
         else:
             return True
 
+    @timer
     def CheckBL(self, label):
         if self.settings['BLC'] == False:
             return True
         else:
             return self.path_control(label,self.settings['BL'])
 
+    @timer
     def CheckWL(self, label):
         if self.settings['WLC'] == False:
             return True
         else:
             return not self.path_control(label,self.settings['WL'])
     
+    @timer
     def ShowRow(self, row):
         return self.CheckAE(row) and self.CheckCE(row) and self.CheckBL(row[0].label) and self.CheckWL(row[0].label)
 
+    @timer
     def toHTML(self):
         self.GetCurrentSettings()
         self.new_json = {}
@@ -168,6 +186,7 @@ class ContentTable():
 
         return result
 
+    @timer
     def RowToHTML(self,row, head = False, show = True):
         margin = 2
         t = '\t'
@@ -192,6 +211,7 @@ class ContentTable():
             result += f'{t*margin}</thead>\n'
         return result
 
+    @timer
     def GetCurrentSettings(self):
         self.settings = {}
         self.settings['WL'] = self.sPanel.white_list
@@ -207,6 +227,7 @@ class Cell():
     text = None
     uid = None
 
+    @timer
     def __init__(self, label = None, type = None, compare = None, file = None, uid = None) -> None:
         self.label = label  
         self.type = type
@@ -240,10 +261,12 @@ class Cell():
         elif self.type == CL.EMPTY:
             self.text = "The file is missing in both projects"    
 
-    # def strip(self, str):
+    # @timer
+    #def strip(self, str):
     #     if (str[-1] == '\n'):
     #         return str[:-1]
 
+    @timer
     def toJSON(self):
         if self.text == None:
             return {}
@@ -261,6 +284,7 @@ class Cell():
                     return_dict[self.uid]["rows"].append(line[2:].replace('<','&lt').replace('>','&gt'))
         return return_dict
 
+    @timer
     def toHTML(self,margin, head = False):
         t = '\t'
         if head:
