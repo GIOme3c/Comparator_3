@@ -1,10 +1,11 @@
+from msilib.schema import Class
 import wx
 from debug import timer
 from wx import HORIZONTAL,VERTICAL
 import ConstantLib as CL
 
 class MainPanel(wx.Panel):
-    @timer
+    #@timer
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
@@ -74,44 +75,61 @@ class MainPanel(wx.Panel):
         ok_button.Bind(wx.EVT_BUTTON, self.onOK)
         cancel_button.Bind(wx.EVT_BUTTON, self.onCancel)
 
-    @timer
+    #@timer
     def onOK(self,event):
         parent = self.GetParent()
         parent.retCode = 1
         parent.Close()
 
-    @timer
+    #@timer
     def onCancel(self,event):
         parent = self.GetParent()
         parent.retCode = 0
         parent.Close()
 
-    @timer
+    #@timer
     def onChoiceMain(self,event):
         parent = self.GetParent()
         parent.main_select = event.GetString()
 
-    @timer  
+    #@timer  
     def onChoiceSub(self,event):
         parent = self.GetParent()
         parent.sub_select = event.GetString()
 
 
-class MainSizer(wx.BoxSizer):
-    def __init__(self, parent):
-        super().__init__(VERTICAL)
+class ListPanel(wx.Panel):
+    def __init__(self, parent, compares):
+        super().__init__(parent)
+        self.compares = compares
+        self.isShown = set([])
+        self.refresh()
 
-        self.Add(MainPanel(parent), 1, wx.EXPAND, 5)
+    def refresh(self):
+        for compare in self.compares:
+            if compare not in self.isShown:
+                self.add_compare()
+
+    def add_compare(self):
+        pass
 
 class AddCompareWindow(wx.Dialog):
-    def __init__(self, parent, project_list):
+    def __init__(self, parent, project_list, compares):
         super().__init__(parent, title = "Create compare")
 
         self.project_list = project_list
         self.main_select = ""
         self.sub_select = ""
         self.retCode = 0
-        self.SetSizer(MainSizer(self))
+
+        self.main_sizer = wx.BoxSizer(VERTICAL)
+        self.main_panel = MainPanel(parent)
+        self.list_panel = ListPanel(parent)
+        self.main_sizer.Add(self.main_panel, 1, wx.EXPAND, 5)
+        self.main_sizer.Add(self.list_panel, 2, wx.EXPAND, 5)
+
+
+        self.SetSizer(self.main_sizer)
 
         self.Bind(wx.EVT_CLOSE, self.onClose)
 

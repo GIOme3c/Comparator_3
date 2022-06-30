@@ -3,7 +3,7 @@ from debug import timer
 from wx import HORIZONTAL,VERTICAL
 
 class ExportWindow(wx.Dialog):
-    @timer
+    #@timer
     def __init__(self, parent) -> None:
         super().__init__(parent, title = "Export")
 
@@ -41,7 +41,7 @@ class ExportWindow(wx.Dialog):
 
         export_button.Bind(wx.EVT_BUTTON, self.onExportClick)
 
-    @timer
+    #@timer
     def onExportClick(self, event):
         root_dir = self.select_dir.GetPath()
         new_folder_path =root_dir +'\\'+ self.export_folder_name.GetValue()

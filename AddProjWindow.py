@@ -4,7 +4,7 @@ from wx import HORIZONTAL,VERTICAL
 import ConstantLib as CL
 
 class ListPanel(wx.Panel):
-    @timer
+    #@timer
     def __init__(self, parent):
         super().__init__(parent = parent)
 
@@ -36,7 +36,7 @@ class ListPanel(wx.Panel):
             panel_sizer.Add(STName, 0, wx.EXPAND | wx.LEFT, 5)
             panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
     
-    @timer
+    #@timer
     def addProject(self,name,path):
         STName = wx.StaticText(
             self,
@@ -51,7 +51,7 @@ class ListPanel(wx.Panel):
         self.GetParent().Layout()
 
 class MainPanel(wx.Panel):
-    @timer
+    #@timer
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
@@ -99,7 +99,7 @@ class MainPanel(wx.Panel):
         add_button.Bind(wx.EVT_BUTTON, self.onAdd)
         cancel_button.Bind(wx.EVT_BUTTON, self.onCancel)
 
-    @timer
+    #@timer
     def onAdd(self,event):
         parent = self.GetParent()
         grand = parent.GetParent()
@@ -111,13 +111,13 @@ class MainPanel(wx.Panel):
         # parent.retCode = 1
         # parent.Close()
 
-    @timer
+    #@timer
     def onCancel(self,event):
         parent = self.GetParent()
         parent.retCode = 0
         parent.Close()
     
-    @timer
+    #@timer
     def onSelect(self,event):
         parent = self.GetParent()
         parent.path = event.GetPath()
@@ -127,7 +127,7 @@ class MainPanel(wx.Panel):
         parent.name = auto_name
 
 class AddProjectWindow(wx.Dialog):
-    @timer
+    #@timer
     def __init__(self, parent, projects):
         super().__init__(parent, title = "Select project", size = (500, 600))
 
@@ -149,7 +149,7 @@ class AddProjectWindow(wx.Dialog):
 
         self.Bind(wx.EVT_CLOSE, self.onClose)
     
-    @timer
+    #@timer
     def onClose(self, event):
         # print(self.path, self.select, self.retCode)
         self.EndModal(self.retCode)

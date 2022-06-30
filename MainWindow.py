@@ -6,7 +6,7 @@ import HTMLManager
 from ContentTable import ContentTable
 
 class MainWindow(wx.Frame):
-    @timer
+    #@timer
     def __init__(self, parent):
         super().__init__(parent, title = "Comparator", style = wx.DEFAULT_FRAME_STYLE | wx.MAXIMIZE)
 
@@ -25,7 +25,7 @@ class MainWindow(wx.Frame):
         sizer.Add(self.Browser, 1, wx.EXPAND ,0)
 
 
-    @timer
+    #@timer
     def onClose(self, event):
         event.Skip()
 

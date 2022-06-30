@@ -2,20 +2,20 @@ import os, json
 from debug import timer
 
 
-@timer
+#@timer
 def END():
     if os.path.exists('content/content.html'):
         os.remove('content/content.html')
     if os.path.exists('content/data.json'):
         os.remove('content/data.json')
 
-@timer
+#@timer
 def getTemplate():
     with open('content/template.html', 'r', encoding='utf-8') as file:
         text = file.read()
     return text
 
-@timer
+#@timer
 def rewriteContentPage(newPage):
     content_path = 'content/content.html'
     if os.path.exists(content_path):
@@ -23,7 +23,7 @@ def rewriteContentPage(newPage):
     with open(content_path, 'x', encoding='utf-8') as file:
         file.write(newPage)
 
-@timer
+#@timer
 def setData(newJSON):
     data_path = 'content/data.json'
     if os.path.exists(data_path):
@@ -31,20 +31,20 @@ def setData(newJSON):
     with open(data_path, 'x', encoding='utf-8') as file:
         file.write('json = '+json.dumps(newJSON,separators=(',', ':')))
 
-@timer
+#@timer
 def setStartPage():
     setContentPage('<h1>Compare some projects</h1>')
 
-@timer
+#@timer
 def setContentPage(content):
     cPage = TEMPLATE_PAGE.replace('###CONTENT###',content)
     rewriteContentPage(cPage)
 
-@timer
+#@timer
 def setLoadPage():
     pass
 
-@timer
+#@timer
 def getResult():
     pass
 

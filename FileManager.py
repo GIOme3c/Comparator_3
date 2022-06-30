@@ -3,7 +3,7 @@ import difflib as df
 import ConstantLib as CL
 from debug import timer
 
-@timer
+#@timer
 def GetFiles(dir): #Returned all files from argument directory
     dir = dir.replace('\\','/')
     tree = os.walk(dir)
@@ -15,7 +15,7 @@ def GetFiles(dir): #Returned all files from argument directory
             files.append(file)
     return dir,files
 
-@timer
+#@timer
 def ConcatLists(lists):  #Concatination lists with only original values
     result_list = []
     for lst in lists:
@@ -25,7 +25,7 @@ def ConcatLists(lists):  #Concatination lists with only original values
     result_list.sort()
     return result_list
 
-@timer
+#@timer
 def GetText(file_path, one_line = False): #returned text from file
     text = []
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -36,18 +36,18 @@ def GetText(file_path, one_line = False): #returned text from file
 
     return text
 
-@timer
+#@timer
 def isDifferens(file_1, file_2): #returned false, if input files are similar
     text_1 = GetText(file_1)
     text_2 = GetText(file_2)
     return (text_1 != text_2)
 
-@timer
+#@timer
 def isCanOpen(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.readline()
     
-@timer
+#@timer
 def GetDifferens(file_1,file_2): #returned compare for 2 files
     text_1 = GetText(file_1)
     text_2 = GetText(file_2)
@@ -70,7 +70,7 @@ def GetDifferens(file_1,file_2): #returned compare for 2 files
     #         result_list.append(line)
     #         add_flag = False
 
-@timer
+#@timer
 def CompareFiles(file_1,file_2): #returned files state
     file_1_isExist = os.path.exists(file_1)
     file_2_isExist = os.path.exists(file_2)

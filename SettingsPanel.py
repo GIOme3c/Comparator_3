@@ -9,7 +9,7 @@ from debug import timer
 
 
 class SettingsPanel(wx.Panel):
-    @timer
+    #@timer
     def __init__(self, parent, content_table):
         super().__init__(parent)
 
@@ -83,17 +83,17 @@ class SettingsPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
 
-    @timer
+    #@timer
     def onExportClick(self,event):
         new_window = ExportWindow(self)
         new_window.ShowModal()
 
-    @timer
+    #@timer
     def onRefreshClick(self,event):
         self.content_table.Refresh()
         self.content_table.ShowNewData()
 
-    @timer
+    #@timer
     def onEditWLClick(self, event):
         newWindow = SelectListWindow(
             self,
@@ -105,7 +105,7 @@ class SettingsPanel(wx.Panel):
         else:
             print("EWL None")
 
-    @timer
+    #@timer
     def onEditBLClick(self, event):
         newWindow = SelectListWindow(
             self,
@@ -117,7 +117,7 @@ class SettingsPanel(wx.Panel):
         else:
             print("EBL None")
 
-    @timer
+    #@timer
     def onAddPButtonClicked(self, event):
         add_project_window = AddProjectWindow(
             self,
@@ -132,7 +132,7 @@ class SettingsPanel(wx.Panel):
         add_project_window.ShowModal()
         add_project_window.Destroy()
 
-    @timer
+    #@timer
     def onAddCButtonClicked(self, event): ##Need to rewrite!
         add_compare_window = AddCompareWindow(
             self,
@@ -142,6 +142,7 @@ class SettingsPanel(wx.Panel):
             main_select = add_compare_window.main_select
             sub_select = add_compare_window.sub_select
             self.content_table.AddCompare(main_select, sub_select)
+            #a = input()
             self.content_table.ShowNewData()
         else:
             print("ACB None")
