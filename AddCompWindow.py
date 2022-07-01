@@ -1,4 +1,3 @@
-from msilib.schema import Class
 import wx
 from debug import timer
 from wx import HORIZONTAL,VERTICAL
@@ -6,10 +5,9 @@ import ConstantLib as CL
 
 class MainPanel(wx.Panel):
     #@timer
-    def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+    def __init__(self, parent):
+        super().__init__(parent)
 
-        parent = self.GetParent()
         panel_sizer = wx.BoxSizer(VERTICAL)
         self.SetSizer(panel_sizer)
         # self.SetBackgroundColour(wx.Colour(100,100,100))
@@ -28,7 +26,6 @@ class MainPanel(wx.Panel):
             choices = list(self.GetParent().project_list)
         )
         select_main_choise.SetSelection(0)
-        parent.main_select = select_main_choise.GetStringSelection()
 
         select_sub_label = wx.StaticText(
             self,
@@ -40,7 +37,6 @@ class MainPanel(wx.Panel):
             choices = list(self.GetParent().project_list)
         )
         select_sub_choise.SetSelection(0)
-        parent.sub_select = select_sub_choise.GetStringSelection()
 
         ok_button = wx.Button(
             self,
@@ -87,40 +83,52 @@ class MainPanel(wx.Panel):
         parent.retCode = 0
         parent.Close()
 
-    #@timer
-    def onChoiceMain(self,event):
-        parent = self.GetParent()
-        parent.main_select = event.GetString()
-
-    #@timer  
-    def onChoiceSub(self,event):
-        parent = self.GetParent()
-        parent.sub_select = event.GetString()
-
-
 class ListPanel(wx.Panel):
     def __init__(self, parent, compares):
         super().__init__(parent)
+        
         self.compares = compares
-        self.isShown = set([])
-        self.refresh()
+        panel_sizer = self.panel_sizer = wx.FlexGridSizer(cols = 2, vgap = 3, hgap = 5)
+        self.SetSizer(panel_sizer)
 
     def refresh(self):
+        self.panel_sizer.Clear(delete_windows=True)
         for compare in self.compares:
             if compare not in self.isShown:
-                self.add_compare()
+                self.add_compare(compare)
 
-    def add_compare(self):
-        pass
+    def add_compare(self, compare):
+        new_text = wx.StaticText(
+            self,
+            label = compare[0]+ ' & ' + compare[1],
+        )
+        new_button = wx.BoxSizer(
+            self,
+            label = "remove"
+        )
+        self.panel_sizer.Add(new_text)
+        self.panel_sizer.Add(new_button)
+
+        def delete_text(event):
+            self.compares.remove(compare)
+            self.panel_sizer.Detach(new_text)
+            new_text.Destroy()
+            new_text = None
+            self.panel_sizer.Detach(new_button)
+            new_button.Destroy()
+            new_button = None
+            self.GetParent.Layout()
+        
+        self.Bind(wx.EVT_BUTTON, delete_text, new_button)
+        
+
+        
 
 class AddCompareWindow(wx.Dialog):
     def __init__(self, parent, project_list, compares):
         super().__init__(parent, title = "Create compare")
 
         self.project_list = project_list
-        self.main_select = ""
-        self.sub_select = ""
-        self.retCode = 0
 
         self.main_sizer = wx.BoxSizer(VERTICAL)
         self.main_panel = MainPanel(parent)
