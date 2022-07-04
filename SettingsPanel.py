@@ -137,13 +137,11 @@ class SettingsPanel(wx.Panel):
         add_compare_window = AddCompareWindow(
             self,
             self.content_table.projects,
+            self.content_table.compares,
         )
-        if add_compare_window.ShowModal():
-            main_select = add_compare_window.main_select
-            sub_select = add_compare_window.sub_select
-            self.content_table.AddCompare(main_select, sub_select)
-            #a = input()
-            self.content_table.ShowNewData()
-        else:
-            print("ACB None")
+        add_compare_window.ShowModal()
+        for compare in add_compare_window.new_compares:
+            self.content_table.AddCompare(compare[0], compare[1])
+            print(f"ADD {compare}")
+        self.content_table.ShowNewData()
         add_compare_window.Destroy()
