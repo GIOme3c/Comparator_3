@@ -133,7 +133,7 @@ class SettingsPanel(wx.Panel):
         add_project_window.Destroy()
 
     #@timer
-    def onAddCButtonClicked(self, event): ##Need to rewrite!
+    def onAddCButtonClicked(self, event):
         add_compare_window = AddCompareWindow(
             self,
             self.content_table.projects,
@@ -141,7 +141,6 @@ class SettingsPanel(wx.Panel):
         )
         add_compare_window.ShowModal()
         for compare in add_compare_window.new_compares:
-            self.content_table.AddCompare(compare[0], compare[1])
-            print(f"ADD {compare}")
+            self.content_table.AddCompare(compare)
         self.content_table.ShowNewData()
         add_compare_window.Destroy()

@@ -74,7 +74,6 @@ class MainPanel(wx.Panel):
         lPanel = self.GetParent().list_panel
         new_compare = (self.select_main_choise.GetStringSelection(), self.select_sub_choise.GetStringSelection())
         if new_compare not in self.compares:
-            self.compares.append(new_compare)
             lPanel.add_compare(new_compare)
 
     #@timer
@@ -113,7 +112,7 @@ class ListPanel(wx.Panel):
         self.GetParent().Layout()
         if isNew:
             self.GetParent().new_compares.append(compare)
-            print(f"NEW {compare}")
+            # print(f"NEW {compare}")
 
         # def delete_text(event):
         #     idx = self.compares.index(compare)

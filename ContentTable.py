@@ -83,8 +83,8 @@ class ContentTable():
         self.projects[pName] = pPath
 
     #@timer
-    def AddCompare(self, mainS, subS): 
-        compare = (mainS,subS)
+    def AddCompare(self,compare): 
+        mainS,subS = compare[0],compare[1]
         if compare in self.compares:
             return
         self.compares.append(compare)
@@ -219,6 +219,8 @@ class Cell():
     type = CL.HEADER
     text = None
     uid = None
+    json = None
+    html = None
 
     #@timer
     def __init__(self, label = None, type = None, compare = None, file = None, uid = None) -> None:
@@ -254,6 +256,8 @@ class Cell():
         elif self.type == CL.EMPTY:
             self.text = "The file is missing in both projects"    
 
+        # self.json = self.toJSON()
+        # self.html = self.toHTML()
     # #@timer
     #def strip(self, str):
     #     if (str[-1] == '\n'):
