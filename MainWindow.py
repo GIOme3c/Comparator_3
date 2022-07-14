@@ -3,7 +3,7 @@ from debug import timer
 from wx import HORIZONTAL,VERTICAL
 from SettingsPanel import SettingsPanel
 import HTMLManager
-from ContentTable import ContentTable
+from new_Content import ContentTable
 
 class MainWindow(wx.Frame):
     #@timer
