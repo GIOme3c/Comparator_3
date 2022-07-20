@@ -13,7 +13,6 @@ class ContentTable(list):
         self.compares = []
         self.files = []
         self.last_id = -1
-        self.html = []
         self.json = {}
 
     def getId(self):
@@ -59,10 +58,27 @@ class ContentTable(list):
         AddFiles(newFiles)
 
     def ShowNewData(self): #!Rewrite!!
-        HTMLManager.setContentPage(str(self.html))
+        HTMLManager.setContentPage(self.getHtml())
         HTMLManager.setData(self.json)
         self.browser.Reload()
 
+    def getHead(self):
+        html = "<thead>\n<tr>\n"
+        for compare in self.compares:
+            html += f"<th>{compare[0]} & {compare[1]}</th>\n"
+        html += "</tr>\n</thead>\n"
+        return html
+
+
+
+    def getHtml(self):
+        html = "<table id = 'main_table' style = 'overflow:scroll'>"
+        html += self.getHead()
+        for el in self:
+            html+= el.getHtml()
+        html+="</table>"
+
+        return html
     
 
 class ContentRow(list):
@@ -73,7 +89,6 @@ class ContentRow(list):
         self.compares = compares
         self.parent = parent
         self.html = ["<tr>","</tr>"]
-        parent.html.append(self.html)
         for compare in compares:
             self.append(compare)
     
@@ -84,6 +99,9 @@ class ContentRow(list):
     def addHtml(self,a):
         # self.html.append(a)
         self.html.insert(-1,a)
+
+    def getHtml(self):
+        return '\n'.join(self.html)
 
     def updateJson(self,uid, data):
         self.parent.json[uid] = data
@@ -99,14 +117,13 @@ class ContentCell():
     #@timer
     def __init__(self,file, compare, parent) -> None:
         self.file = file
-        self.compare = compare
+        self.compare = (parent.parent.projects[compare[0]],parent.parent.projects[compare[1]])
         self.uid = parent.getId()
         self.parent = parent
         self.html = None
         self.setData()
 
     def setData(self):
-        print(self.file, self.compare,self.uid)
         mFile, sFile = self.compare[0]+self.file, self.compare[1]+self.file
         mState, sState = FileManager.CompareFiles(mFile, sFile)
         if (mState == sState == CL.MISSING):
@@ -116,9 +133,6 @@ class ContentCell():
         else:
             self.type = sState
 
-        print(mFile,sFile)
-        print(mState,sState)
-        print("================")
 
         if self.type == CL.EXISTS:
             self.text = FileManager.GetText(mFile, True)
@@ -143,14 +157,11 @@ class ContentCell():
         #     return {}
         self.json = {self.uid : {"rows":[], "types":[]}}
         if type(self.text) == str:
-            # self.text = self.strip(self.text)
-            # print(self.file)
             self.json[self.uid]["rows"].append(self.text.replace('<','&lt').replace('>','&gt').replace('\n','<br>'))
             self.json[self.uid]["types"].append(CL.TYPES[self.type])
         else:
             for line in self.text:
                 if (line[:2] != '? '):
-                    # line = self.strip(line)
                     self.json[self.uid]["types"].append(CL.TYPES[line[:2]])
                     self.json[self.uid]["rows"].append(line[2:].replace('<','&lt').replace('>','&gt'))
         self.parent.updateJson(self.uid, self.json)
@@ -160,10 +171,9 @@ class ContentCell():
         newHTML = f'<td code="{self.uid}" class = {self.type}>{self.type}</td>\n'
         if self.html:
             self.parent.updateHtml(self.html, newHTML)
-            self.html = newHTML
         else:
-            self.html = newHTML
-            self.parent.addHtml(self.html)
+            self.parent.addHtml(newHTML)
+        self.html = newHTML
 
             
 
