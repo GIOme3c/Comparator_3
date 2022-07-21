@@ -1,4 +1,5 @@
 const table = document.getElementById('main_table');
+// resizableGrid(table);
 table.addEventListener('click', onTrClick)
 
 function getTextDiv(code){
@@ -15,6 +16,8 @@ function getTextDiv(code){
   // </div>`;
   let strs = json[code]["rows"]
   let tps = json[code]["types"]
+  console.log(strs)
+  console.log(tps)
   ret_str = '<div style="display:grid; grid: 1fr 1fr/1fr 1fr">'
   for (let i = 0; i<strs.length; i++)
     ret_str += `<div><input type="checkbox"></div><div class = "${tps[i]}"><pre style="margin:0">${strs[i]}</pre></div>`

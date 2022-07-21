@@ -63,16 +63,16 @@ class ContentTable(list):
         self.browser.Reload()
 
     def getHead(self):
-        html = "<thead>\n<tr>\n"
+        html = "<thead>\n<tr>\n<th data-rtc-resizable = 'files'>Files</th>\n"
         for compare in self.compares:
-            html += f"<th>{compare[0]} & {compare[1]}</th>\n"
+            html += f"<th  data-rtc-resizable ='{compare[0]}&{compare[1]}' >{compare[0]} & {compare[1]}</th>\n"
         html += "</tr>\n</thead>\n"
         return html
 
 
 
     def getHtml(self):
-        html = "<table id = 'main_table' style = 'overflow:scroll'>"
+        html = "<table id = 'main_table' class='data' data-rtc-resizable-table='main_table'>"
         html += self.getHead()
         for el in self:
             html+= el.getHtml()
@@ -88,7 +88,7 @@ class ContentRow(list):
         self.file_name = file
         self.compares = compares
         self.parent = parent
-        self.html = ["<tr>","</tr>"]
+        self.html = ["<tr>",f'<td class = "file_name">{self.file_name}</td>',"</tr>"]
         for compare in compares:
             self.append(compare)
     
@@ -155,20 +155,20 @@ class ContentCell():
     def toJSON(self):
         # if self.text == None: #!OPTIMIZE
         #     return {}
-        self.json = {self.uid : {"rows":[], "types":[]}}
+        self.json = {"rows":[], "types":[]}
         if type(self.text) == str:
-            self.json[self.uid]["rows"].append(self.text.replace('<','&lt').replace('>','&gt').replace('\n','<br>'))
-            self.json[self.uid]["types"].append(CL.TYPES[self.type])
+            self.json["rows"].append(self.text.replace('<','&lt').replace('>','&gt').replace('\n','<br>'))
+            self.json["types"].append(CL.TYPES[self.type])
         else:
             for line in self.text:
                 if (line[:2] != '? '):
-                    self.json[self.uid]["types"].append(CL.TYPES[line[:2]])
-                    self.json[self.uid]["rows"].append(line[2:].replace('<','&lt').replace('>','&gt'))
+                    self.json["types"].append(CL.TYPES[line[:2]])
+                    self.json["rows"].append(line[2:].replace('<','&lt').replace('>','&gt'))
         self.parent.updateJson(self.uid, self.json)
 
     #@timer
     def toHTML(self):
-        newHTML = f'<td code="{self.uid}" class = {self.type}>{self.type}</td>\n'
+        newHTML = f'<td code="{self.uid}" class = {self.type}>{self.type}</td>'
         if self.html:
             self.parent.updateHtml(self.html, newHTML)
         else:
