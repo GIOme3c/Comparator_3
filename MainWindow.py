@@ -3,7 +3,7 @@ from debug import timer
 from wx import HORIZONTAL,VERTICAL
 from SettingsPanel import SettingsPanel
 import HTMLManager
-from new_Content import ContentTable
+from Content import ContentTable
 
 class MainWindow(wx.Frame):
     #@timer
@@ -20,6 +20,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.onClose)
 
         self.SettingsPanel = SettingsPanel(self, self.content_table)
+        self.content_table.set_sPanel(self.SettingsPanel)
 
         sizer.Add(self.SettingsPanel, 0, wx.EXPAND, 0)
         sizer.Add(self.Browser, 1, wx.EXPAND ,0)

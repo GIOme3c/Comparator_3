@@ -50,10 +50,14 @@ class ExportWindow(wx.Dialog):
                 pass #Exist now
             else:
                 os.mkdir(new_folder_path)
+                os.mkdir(new_folder_path+'/js')
+                os.mkdir(new_folder_path+'/css')
                 shutil.copyfile('content/content.html',new_folder_path+'/content.html')
                 shutil.copyfile('content/data.json',new_folder_path+'/data.json')
-                shutil.copyfile('content/script.js',new_folder_path+'/script.js')
-                shutil.copyfile('content/style.css',new_folder_path+'/style.css')
+                shutil.copyfile('content/js/script.js',new_folder_path+'/js/script.js')
+                shutil.copyfile('content/js/index.js',new_folder_path+'/js/index.js')
+                shutil.copyfile('content/css/style.css',new_folder_path+'/css/style.css')
+                shutil.copyfile('content/css/resizable-table-columns.css',new_folder_path+'/css/resizable-table-columns.css')
                 os.system(f"explorer {new_folder_path}")
                 self.Close()
         else:

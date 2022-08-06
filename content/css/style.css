@@ -36,6 +36,7 @@ body {
 
 body {
     font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: small;
 }
 
 table {
@@ -59,7 +60,7 @@ thead {
 
 th,
 td {
-    padding: 15px;
+    padding: 5px;
     /* overflow: hidden; */
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -80,8 +81,8 @@ th {
 
 td {
     border: 1px solid grey;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     color: #0a0909;
 }
 

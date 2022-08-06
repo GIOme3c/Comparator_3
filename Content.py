@@ -14,12 +14,35 @@ class ContentTable(list):
         self.files = []
         self.last_id = -1
         self.json = {}
+        self.settings = {}
+
+    def Refresh(self):
+        newFiles = []
+        for compare in self.compares:
+            mainS, subS = compare
+            self.projects[mainS],mFiles = FileManager.GetFiles(self.projects[mainS])
+            self.projects[subS],sFiles = FileManager.GetFiles(self.projects[subS])
+            newFiles = FileManager.ConcatLists([mFiles,sFiles,newFiles])
+        
+        for row in self:
+            row.Refresh()
+
+        for file in newFiles:
+            if file not in self.files:
+                self.append(file)
+        
+        self.ShowNewData()
+
+    def set_sPanel(self,sPanel):
+        self.sPanel = sPanel
+        self.GetCurrentSettings()
 
     def getId(self):
         self.last_id += 1
         return self.last_id
 
     def append(self,file):
+        self.files.append(file)
         super().append(ContentRow(file, self.compares, self))
 
     #@timer
@@ -46,7 +69,8 @@ class ContentTable(list):
         #@timer
         def AddFiles(files):
             for file in files:
-                self.append(file)
+                if file not in self.files:
+                    self.append(file)
 
         mainS,subS = compare[0],compare[1]
         self.compares.append(compare)
@@ -69,9 +93,8 @@ class ContentTable(list):
         html += "</tr>\n</thead>\n"
         return html
 
-
-
     def getHtml(self):
+        self.sort()
         html = "<table id = 'main_table' class='data' data-rtc-resizable-table='main_table'>"
         html += self.getHead()
         for el in self:
@@ -80,6 +103,34 @@ class ContentTable(list):
 
         return html
     
+    def GetCurrentSettings(self):
+        self.settings['WL'] = self.sPanel.white_list
+        self.settings['BL'] = self.sPanel.black_list
+        self.settings['WLC'] = self.sPanel.WL_check.GetValue()
+        self.settings['BLC'] = self.sPanel.BL_check.GetValue()
+        self.settings['AEC'] = self.sPanel.AE_check.GetValue()
+        self.settings['CEC'] = self.sPanel.CE_check.GetValue()
+
+    def CheckNewRules(self):
+        self.GetCurrentSettings()
+        for row in self:
+            row.checkRules()
+        HTMLManager.setContentPage(self.getHtml())
+        self.browser.Reload()
+
+
+class HeaderRow():
+
+    def __init__(self,parent,file_name) -> None:
+        self.file_name = file_name
+        self.parent = parent
+
+    def getHtml(self):
+        return f"<tr> <td colspan='{len(self.parent.compares)}'>{self.file_name}</td> </tr>"
+
+    def checkRules(self):
+        pass
+
 
 class ContentRow(list):
 
@@ -88,16 +139,33 @@ class ContentRow(list):
         self.file_name = file
         self.compares = compares
         self.parent = parent
+        self.settings = parent.settings
         self.html = ["<tr>",f'<td class = "file_name">{self.file_name}</td>',"</tr>"]
         for compare in compares:
             self.append(compare)
+        self.checkRules()
+        
+    def __str__(self):
+        return self.file_name
+
+    def __lt__(self, x) -> bool:
+        return self.file_name<x.file_name
+    
+    def __gt__(self, x) -> bool:
+        return self.file_name>x.file_name
+    
+    def checkRules(self):
+        self.html[0] = f"<tr {'hidden'*(not self.ShowRow())}>"
+
+    def Refresh(self):
+        for cell in self:
+            cell.setData()
     
     def updateHtml(self,a,b):
         i = self.html.index(a)
         self.html[i] = b
 
     def addHtml(self,a):
-        # self.html.append(a)
         self.html.insert(-1,a)
 
     def getHtml(self):
@@ -111,6 +179,55 @@ class ContentRow(list):
 
     def append(self,compare):
         super().append(ContentCell(self.file_name,compare,self))
+
+    def path_control(self, path, rules):
+        for rule in rules:
+            try:
+                compare_result = re.search(rule, path)
+            except:
+                continue
+            if (compare_result != None):
+                if (compare_result.group(0)!=''):
+                    return False
+        return True
+
+    def CheckAE(self):
+        all_exist = True
+        for cell in self:
+            if cell.type != CL.EXISTS:
+                all_exist = False
+                break
+        if all_exist == True and self.settings['AEC'] == False:
+            return False
+        else:
+            return True
+
+    def CheckCE(self):
+        compare_error = False
+        for cell in self:
+            if cell.type == CL.COMPERR:
+                compare_error = True
+                break
+        if compare_error == True and self.settings['CEC'] == False:
+            return False
+        else:
+            return True
+
+    def CheckBL(self):
+        if self.settings['BLC'] == False:
+            return True
+        else:
+            return self.path_control(self.file_name,self.settings['BL'])
+
+    def CheckWL(self):
+        if self.settings['WLC'] == False:
+            return True
+        else:
+            return not self.path_control(self.file_name,self.settings['WL'])
+    
+    def ShowRow(self):
+        return self.CheckAE() and self.CheckCE() and self.CheckBL() and self.CheckWL()
+        
 
 class ContentCell():
 
@@ -153,8 +270,6 @@ class ContentCell():
 
     #@timer
     def toJSON(self):
-        # if self.text == None: #!OPTIMIZE
-        #     return {}
         self.json = {"rows":[], "types":[]}
         if type(self.text) == str:
             self.json["rows"].append(self.text.replace('<','&lt').replace('>','&gt').replace('\n','<br>'))
@@ -176,7 +291,5 @@ class ContentCell():
         self.html = newHTML
 
             
-
-   
 if __name__ == "__main__":
     a = ContentTable()

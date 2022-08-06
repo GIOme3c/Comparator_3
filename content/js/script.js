@@ -3,17 +3,6 @@ const table = document.getElementById('main_table');
 table.addEventListener('click', onTrClick)
 
 function getTextDiv(code){
-  // return `<div style="display:grid; grid: 1fr 1fr/1fr 1fr">
-  // <div><input type="checkbox"></div><div><pre style="margin:0">${code}</pre></div>
-  // <div><input type="checkbox"></div><div><pre style="margin:0">     zcxvb</pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // <div></div><div><pre></pre></div>
-  // </div>`;
   let strs = json[code]["rows"]
   let tps = json[code]["types"]
   console.log(strs)

@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="resizable-table-columns.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/resizable-table-columns.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparator page</title>
@@ -12,8 +12,7 @@
 
 <body>
     ###CONTENT###
-    <script src="index.js"></script>
-    <script src="store.js"></script>
+    <script src="js/index.js"></script>
     <script>
         (function (window, ResizableTableColumns, undefined) {
             var store = window.store && window.store.enabled
@@ -28,22 +27,11 @@
                 }
 
                 var  options = {
-                // boolean - The resize handle will span the entire height of the table
                 resizeFromBody: true,
-
-                // null or number - The minimum width any column in the table should have
                 minWidth: 40,
-
-                // null or number - The maximum width any column in the table should have
                 maxWidth: null,
-
-                // number - The maximum number off milliseconds between to pointer down events to consider the action a 'double click'
                 doubleClickDelay: 500,
-
-                // data store provider (ex: https://github.com/marcuswestin/store.js)
                 store: null,
-
-                // null or number - The suggestion for how wide (in pixels) a cell might be in case the content is really wide.
                 maxInitialWidthHint: null
 }
 
@@ -55,8 +43,7 @@
             }
         })(window, window.validide_resizableTableColumns.ResizableTableColumns, void (0));
     </script>
-    <!-- <script src="resizable.js"></script> -->
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
     <script src="data.json"></script>
 </body>
 

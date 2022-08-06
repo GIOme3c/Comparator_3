@@ -14,7 +14,6 @@ class SettingsPanel(wx.Panel):
         super().__init__(parent)
 
         self.content_table = content_table
-        content_table.sPanel = self
         
         self.log = self.GetParent().log
         settings_sizer = wx.BoxSizer(HORIZONTAL)
@@ -42,7 +41,7 @@ class SettingsPanel(wx.Panel):
             self,
             label = "Refresh data",
         )
-        import_button = wx.Button(
+        export_button = wx.Button(
             self,
             label = "Export HTML",
         )
@@ -72,26 +71,28 @@ class SettingsPanel(wx.Panel):
             (AE_check,0,wx.TOP,3),
             (CE_check,0,wx.TOP,3),
             (refresh_button),
-            (import_button),
+            (export_button),
         ])
 
-        self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)
-        self.Bind(wx.EVT_BUTTON, self.onExportClick, import_button)
+        self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)   #TODO
+        self.Bind(wx.EVT_BUTTON, self.onExportClick, export_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
         self.Bind(wx.EVT_BUTTON, self.onAddCButtonClicked, addC_button)
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
-        self.Bind(wx.EVT_CHECKBOX, self.onRefreshClick) ###Need to rewrite
+        self.Bind(wx.EVT_CHECKBOX, self.onCheckBoxClick) 
 
     #@timer
     def onExportClick(self,event):
         new_window = ExportWindow(self)
         new_window.ShowModal()
 
+    def onCheckBoxClick(self,event):
+        self.content_table.CheckNewRules()
+
     #@timer
     def onRefreshClick(self,event):
         self.content_table.Refresh()
-        self.content_table.ShowNewData()
 
     #@timer
     def onEditWLClick(self, event):
@@ -102,8 +103,7 @@ class SettingsPanel(wx.Panel):
         )
         if newWindow.ShowModal():
             self.white_list = newWindow.rList
-        else:
-            print("EWL None")
+            self.content_table.CheckNewRules()
 
     #@timer
     def onEditBLClick(self, event):
@@ -114,8 +114,7 @@ class SettingsPanel(wx.Panel):
         )
         if newWindow.ShowModal():
             self.black_list = newWindow.rList
-        else:
-            print("EBL None")
+            self.content_table.CheckNewRules()
 
     #@timer
     def onAddPButtonClicked(self, event):
@@ -123,12 +122,6 @@ class SettingsPanel(wx.Panel):
             self,
             self.content_table.projects,
         )
-        # if add_project_window.ShowModal():
-        #     path = add_project_window.path
-        #     name = add_project_window.name
-        #     self.content_table.AddProject(name,path)
-        # else:
-        #     print("APB None")
         add_project_window.ShowModal()
         add_project_window.Destroy()
 
