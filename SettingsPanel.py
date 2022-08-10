@@ -4,6 +4,7 @@ from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
 from SelectList import SelectListWindow
 from ExportWindow import ExportWindow
+from HeaderWindow import HeaderWindow
 from debug import timer
 
 
@@ -41,10 +42,15 @@ class SettingsPanel(wx.Panel):
             self,
             label = "Refresh data",
         )
+        header_button = wx.Button(
+            self,
+            label = "Add header",
+        )
         export_button = wx.Button(
             self,
             label = "Export HTML",
         )
+
         WL_check = self.WL_check = wx.CheckBox(
             self,
             label = "White list",
@@ -61,6 +67,7 @@ class SettingsPanel(wx.Panel):
             self,
             label = "Compare error",
         )
+
         settings_sizer.AddMany([
             (addP_button,),
             (addC_button,),
@@ -71,16 +78,22 @@ class SettingsPanel(wx.Panel):
             (AE_check,0,wx.TOP,3),
             (CE_check,0,wx.TOP,3),
             (refresh_button),
+            (header_button),
             (export_button),
         ])
 
-        self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)   #TODO
+        self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)  
+        self.Bind(wx.EVT_BUTTON, self.onHeaderClick, header_button)  
         self.Bind(wx.EVT_BUTTON, self.onExportClick, export_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
         self.Bind(wx.EVT_BUTTON, self.onAddCButtonClicked, addC_button)
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onCheckBoxClick) 
+
+    def onHeaderClick(self,event):
+        new_window = HeaderWindow(self)
+        new_window.ShowModal()
 
     #@timer
     def onExportClick(self,event):

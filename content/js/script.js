@@ -7,9 +7,9 @@ function getTextDiv(code){
   let tps = json[code]["types"]
   console.log(strs)
   console.log(tps)
-  ret_str = '<div style="display:grid; grid: 1fr 1fr/1fr 1fr">'
+  ret_str = '<div style="display:flex;flex-direction: column;">'
   for (let i = 0; i<strs.length; i++)
-    ret_str += `<div><input type="checkbox"></div><div class = "${tps[i]}"><pre style="margin:0">${strs[i]}</pre></div>`
+    ret_str += `<div style="display: flex;"><div class="space"><input type="checkbox"></div><div class = "${tps[i]}"><pre style="margin:0">${strs[i]}</pre></div></div>`
   console.log(strs)
   console.log(tps)
   ret_str += '</div>'

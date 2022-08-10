@@ -116,3 +116,8 @@ td {
 .drow {
     background-color: rgb(255,204,204);
 }
+
+.space {
+    width: 20px;
+    height: 20px;
+}

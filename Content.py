@@ -11,10 +11,17 @@ class ContentTable(list):
         self.browser = None
         self.projects = {}
         self.compares = []
+        self.headers = []
         self.files = []
         self.last_id = -1
         self.json = {}
         self.settings = {}
+
+    def append_header(self,header,colour):
+        new_header = HeaderRow(self,header,colour)
+        self.headers.append(new_header)
+        super().append(new_header)
+
 
     def Refresh(self):
         newFiles = []
@@ -121,9 +128,10 @@ class ContentTable(list):
 
 class HeaderRow():
 
-    def __init__(self,parent,file_name) -> None:
+    def __init__(self,parent,file_name,colour) -> None:
         self.file_name = file_name
         self.parent = parent
+        self.colour = colour
 
     def getHtml(self):
         return f"<tr> <td colspan='{len(self.parent.compares)}'>{self.file_name}</td> </tr>"
