@@ -133,8 +133,24 @@ class HeaderRow():
         self.parent = parent
         self.colour = colour
 
+    def __str__(self):
+        return self.file_name
+
+    def __lt__(self, x) -> bool:
+        return self.file_name<x.file_name
+    
+    def __gt__(self, x) -> bool:
+        return self.file_name>x.file_name
+
+    def Refresh(self):
+        pass
+
+    def append(self):
+        pass
+
     def getHtml(self):
-        return f"<tr> <td colspan='{len(self.parent.compares)}'>{self.file_name}</td> </tr>"
+        rgb = self.colour.Get()
+        return f"<tr> <td style = 'background-color: rgb({rgb[0]},{rgb[1]},{rgb[2]});' colspan='{len(self.parent.compares)+1}'>{self.file_name}</td> </tr>"
 
     def checkRules(self):
         pass

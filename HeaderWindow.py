@@ -1,3 +1,4 @@
+from random import random
 import wx, os
 from debug import timer
 from wx import HORIZONTAL,VERTICAL
@@ -5,55 +6,69 @@ import ConstantLib as CL
 
 class ListPanel(wx.Panel):
     #@timer
-    def __init__(self, parent):
-        super().__init__(parent = parent)
+    def __init__(self, parent,content):
+        super().__init__(parent)
+        self.content = content
 
         panel_sizer = self.panel_sizer = wx.FlexGridSizer(cols = 2, vgap = 3, hgap = 5)
         self.SetSizer(panel_sizer)
 
-        STNameHeader = wx.StaticText(
+        STPathHeader = wx.StaticText(
             self,
             label = "Name",
         )
-        STNameHeader.SetBackgroundColour(CL.COLOUR[CL.HEADER])
-        STPathHeader = wx.StaticText(
+        STPathHeader.SetBackgroundColour(CL.COLOUR[CL.HEADER])
+        CLPickerHeader = wx.StaticText(
             self,
             label = "Path",
         )
-        STPathHeader.SetBackgroundColour(CL.COLOUR[CL.HEADER])
-        panel_sizer.Add(STNameHeader, 0, wx.EXPAND | wx.LEFT, 5)
+        CLPickerHeader.SetBackgroundColour(CL.COLOUR[CL.HEADER])
         panel_sizer.Add(STPathHeader, 0, wx.EXPAND | wx.LEFT, 5)
+        panel_sizer.Add(CLPickerHeader, 0, wx.EXPAND | wx.LEFT, 5)
 
-        # for name in parent.projects:
-        #     STName = wx.StaticText(
-        #         self,
-        #         label = name,
-        #     )
-        #     STPath = wx.StaticText(
-        #         self,
-        #         label = parent.projects[name],
-        #     )
-        #     panel_sizer.Add(STName, 0, wx.EXPAND | wx.LEFT, 5)
-        #     panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
+        for path in content.headers:
+            STPath = wx.StaticText(
+                self,
+                label = path.file_name,
+            )
+            CLPicker = wx.ColourPickerCtrl(
+                self,
+                colour =path.colour,
+
+            )
+            panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
+            panel_sizer.Add(CLPicker, 0, wx.EXPAND | wx.LEFT, 5)
     
     #@timer
-    def addProject(self,name,path):
-        STName = wx.StaticText(
-            self,
-            label = name,
-        )
+    def showHead(self):
+        path = self.content.headers[-1]
         STPath = wx.StaticText(
             self,
-            label = path,
+            label = path.file_name,
         )
-        self.panel_sizer.Add(STName, 0, wx.EXPAND | wx.LEFT, 5)
+        CLPicker = wx.ColourPickerCtrl(
+            self,
+            colour =path.colour,
+
+        )
         self.panel_sizer.Add(STPath, 0, wx.EXPAND | wx.LEFT, 5)
+        self.panel_sizer.Add(CLPicker, 0, wx.EXPAND | wx.LEFT, 5)
         self.GetParent().Layout()
 
 class MainPanel(wx.Panel):
     #@timer
-    def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+
+    def getRandomColour(self):
+        r = int(random()*255)
+        g = int(random()*255)
+        b = int(random()*255)
+        return wx.Colour(r,g,b)
+
+    def __init__(self, parent, content):
+        super().__init__(parent)
+        
+        self.content = content
+        self.is_correct = False
 
         panel_sizer = wx.BoxSizer(VERTICAL)
         self.SetSizer(panel_sizer)
@@ -68,8 +83,9 @@ class MainPanel(wx.Panel):
             label = "Select color",
         )
         color_label.SetFont(CL.FONT_10)
-        color_picker = wx.ColourPickerCtrl(
+        color_picker = self.color_picker = wx.ColourPickerCtrl(
             self,
+            colour=self.getRandomColour()
         )
         add_button = wx.Button(
             self,
@@ -99,16 +115,12 @@ class MainPanel(wx.Panel):
         cancel_button.Bind(wx.EVT_BUTTON, self.onCancel)
 
     #@timer
-    def onAdd(self,event): #!TODO
-        parent = self.GetParent()
-        grand = parent.GetParent()
-        parent.name = self.name_as.GetValue()
-
-        if os.path.isdir(parent.path):
-            grand.content_table.AddProject(parent.name,parent.path)
-            parent.lPanel.addProject(parent.name,parent.path)
-        # parent.retCode = 1
-        # parent.Close()
+    def onAdd(self,event):
+        if self.is_correct:        
+            self.content.append_header(self.path, self.color_picker.GetColour())
+            parent = self.GetParent()
+            parent.lPanel.showHead()
+        
 
     #@timer
     def onCancel(self,event): 
@@ -117,13 +129,15 @@ class MainPanel(wx.Panel):
         parent.Close()
     
     #@timer
-    def onSelect(self,event): #!TODO
-        parent = self.GetParent()
-        parent.path = event.GetPath()
-        slash_pos = parent.path.rfind('\\')
-        auto_name = parent.path[slash_pos+1:]
-        self.name_as.SetLabel(auto_name)
-        parent.name = auto_name
+    def onSelect(self,event):
+        self.is_correct = False
+        self.path = event.GetPath().replace('\\','/')
+        for root in self.content.projects:
+            self.content.projects[root] = self.content.projects[root].replace('\\','/')
+            if self.content.projects[root] in self.path:
+                self.is_correct = True
+                self.path = self.path.replace(self.content.projects[root],'')
+
 
 class HeaderWindow(wx.Dialog):
     #@timer
@@ -134,8 +148,8 @@ class HeaderWindow(wx.Dialog):
         main_sizer = wx.BoxSizer(VERTICAL)
         self.SetSizer(main_sizer)
 
-        self.mPanel = MainPanel(self)
-        self.lPanel = ListPanel(self)
+        self.mPanel = MainPanel(self, content)
+        self.lPanel = ListPanel(self, content)
 
         main_sizer.Add(self.mPanel, 1, wx.EXPAND, 5)
         main_sizer.Add(self.lPanel, 2, wx.EXPAND, 5)

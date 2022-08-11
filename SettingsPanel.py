@@ -92,8 +92,9 @@ class SettingsPanel(wx.Panel):
         self.Bind(wx.EVT_CHECKBOX, self.onCheckBoxClick) 
 
     def onHeaderClick(self,event):
-        new_window = HeaderWindow(self)
+        new_window = HeaderWindow(self,self.content_table)
         new_window.ShowModal()
+        self.content_table.ShowNewData()
 
     #@timer
     def onExportClick(self,event):
