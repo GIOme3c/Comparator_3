@@ -105,7 +105,7 @@ td {
     background-color: rgb(255,0,0);
 }
 .empty {
-    background-color: rgb(153,153,153);
+    background-color: rgb(255,255,255);
 }
 .row {
     background-color: rgb(200,200,200);
@@ -115,6 +115,10 @@ td {
 }
 .drow {
     background-color: rgb(255,204,204);
+}
+
+.sub-header {
+    font-size: large;
 }
 
 .space {

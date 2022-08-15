@@ -56,7 +56,10 @@ class ContentTable(list):
     def CreateBrowser(self, parent):
         self.browser = wx.html2.WebView.New(parent = parent, backend = wx.html2.WebViewBackendEdge, url = CL.BASE_URL) 
 
-        HTMLManager.setStartPage()
+        if (self):
+            HTMLManager.setContentPage(self.getHtml())
+        else:
+            HTMLManager.setStartPage()
         return self.browser
 
     def AddProject(self,pName,pPath):
@@ -89,6 +92,10 @@ class ContentTable(list):
         AddFiles(newFiles)
 
     def ShowNewData(self): #!Rewrite!!
+        print("projects = ",self.projects)
+        print("compares = ",self.compares)
+        print("settings = ",self.settings)
+        print("headers = ",self.headers)
         HTMLManager.setContentPage(self.getHtml())
         HTMLManager.setData(self.json)
         self.browser.Reload()
@@ -145,12 +152,12 @@ class HeaderRow():
     def Refresh(self):
         pass
 
-    def append(self):
+    def append(self, *args, **kwargs):
         pass
 
     def getHtml(self):
         rgb = self.colour.Get()
-        return f"<tr> <td style = 'background-color: rgb({rgb[0]},{rgb[1]},{rgb[2]});' colspan='{len(self.parent.compares)+1}'>{self.file_name}</td> </tr>"
+        return f"<tr class='sub-header'> <td style = 'background-color: rgb({rgb[0]},{rgb[1]},{rgb[2]});' colspan='{len(self.parent.compares)+1}'><b>{self.file_name}</b></td> </tr>"
 
     def checkRules(self):
         pass
