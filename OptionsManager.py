@@ -1,3 +1,5 @@
+from Content import HeaderRow
+
 def getOption(start = None, end = None):
     
     start_pos = 0
@@ -16,7 +18,7 @@ def getOption(start = None, end = None):
                     break
             return text[start_pos+1:end_pos]
         else:
-            return bool(text[start_pos][-1])
+            return int(text[start_pos].rstrip()[-1])
 
 
 def getOptions():
@@ -33,8 +35,49 @@ def getOptions():
 
     return options
 
+def transform_value(value):
+    if type(value) == list:
+        if (value and type(value[0]) != HeaderRow()):
+            result = [x+"\n" for x in value]
+        else:
+            result = [x.get_save_data() for x in value] 
+    if type(value) == dict:
+        result = [str(x)+" "+str(value[x])+"\n" for x in value]
+    if type(value) == type(False):
+        return int(value)
+    else:
+        return result
+
+def saveOption(start = None, end = None, value = None):
+    value = transform_value(value)
+
+    with open(".default","r") as file:
+        text = file.readlines()
+
+    with open(".default","w") as file:
+        for i in range(len(text)):
+            if text[i].startswith(start):
+                start_pos = i
+                break
+        if (end is not None):
+            for i in range(start_pos+1,len(text),1):
+                if text[i].startswith(end):
+                    end_pos = i
+                    break
+            file.writelines(text[:start_pos+1]+value+text[end_pos:])
+        else:
+            text[start_pos] = start+f" : {value}\n"
+            file.writelines(text)
 
 def saveOptions(projects = None, compares = None, headers = None, 
                 WL = None, BL = None, WLC = None, BLS = None,
                 AEC = None, CEC = None):
-    pass
+    saveOption("$projects","$endproject",projects)
+    saveOption("$compares","$endcompares",compares)
+    saveOption("$headers","$endheaders",headers)
+    saveOption("$WL","$endWL",WL)
+    saveOption("$BL","$endBL",BL)
+    saveOption("$WLC",None,WLC)
+    saveOption("$BLC",None,BLS)
+    saveOption("$AEC",None,AEC)
+    saveOption("$CEC",None,CEC)

@@ -1,4 +1,4 @@
-
+from wx import Colour
 import wx.html2, re, FileManager, HTMLManager
 import ConstantLib as CL
 from debug import timer
@@ -40,9 +40,15 @@ class ContentTable(list):
         
         self.ShowNewData()
 
-    def set_sPanel(self,sPanel):
+    def set_sPanel(self,sPanel, options):
         self.sPanel = sPanel
         self.GetCurrentSettings()
+        for header in options["headers"]:
+            self.append_header(header[0], Colour(header[1],header[2],header[3]))
+            self.projects = options["projects"]
+            self.compares = options["compares"]
+            if self.compares:
+                self.Refresh()
 
     def getId(self):
         self.last_id += 1
@@ -139,6 +145,9 @@ class HeaderRow():
         self.file_name = file_name
         self.parent = parent
         self.colour = colour
+
+    def get_save_data(self):
+        return str(self.file_name) + " " + str(self.colour.getRed()) + " " + str(self.colour.getGreen()) + " " + str(self.colour.getBlue())+"\n"
 
     def __str__(self):
         return self.file_name

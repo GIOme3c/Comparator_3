@@ -1,4 +1,4 @@
-import wx
+import wx, OptionsManager
 from wx import HORIZONTAL,VERTICAL
 from AddProjWindow import AddProjectWindow
 from AddCompWindow import AddCompareWindow
@@ -11,7 +11,7 @@ from debug import timer
 
 class SettingsPanel(wx.Panel):
     #@timer
-    def __init__(self, parent, content_table):
+    def __init__(self, parent, content_table, options):
         super().__init__(parent)
 
         self.content_table = content_table
@@ -19,8 +19,8 @@ class SettingsPanel(wx.Panel):
         self.log = self.GetParent().log
         settings_sizer = wx.BoxSizer(HORIZONTAL)
         self.SetSizer(settings_sizer)
-        self.white_list = []
-        self.black_list = []
+        self.white_list = options["WL"]
+        self.black_list = options["BL"]
 
         addP_button = wx.Button(
             self,
@@ -50,23 +50,31 @@ class SettingsPanel(wx.Panel):
             self,
             label = "Export HTML",
         )
+        save_options_button = wx.Button(
+            self,
+            label = "Save options"
+        )
 
         WL_check = self.WL_check = wx.CheckBox(
             self,
             label = "White list",
         )
+        WL_check.SetValue(options["WLC"])
         BL_check = self.BL_check = wx.CheckBox(
             self,
             label = "Black list",
         )
+        BL_check.SetValue(options["BLC"])
         AE_check = self.AE_check = wx.CheckBox(
             self,
             label = "All exists",
         )
+        AE_check.SetValue(options["AEC"])
         CE_check = self.CE_check = wx.CheckBox(
             self,
             label = "Compare error",
         )
+        CE_check.SetValue(options["CEC"])
 
         settings_sizer.AddMany([
             (addP_button,),
@@ -80,9 +88,11 @@ class SettingsPanel(wx.Panel):
             (refresh_button),
             (header_button),
             (export_button),
+            (save_options_button),
         ])
 
         self.Bind(wx.EVT_BUTTON, self.onRefreshClick, refresh_button)  
+        self.Bind(wx.EVT_BUTTON, self.onSaveClick, save_options_button)  
         self.Bind(wx.EVT_BUTTON, self.onHeaderClick, header_button)  
         self.Bind(wx.EVT_BUTTON, self.onExportClick, export_button)
         self.Bind(wx.EVT_BUTTON, self.onAddPButtonClicked, addP_button)
@@ -90,6 +100,16 @@ class SettingsPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onEditWLClick, WL_button)
         self.Bind(wx.EVT_BUTTON, self.onEditBLClick, BL_button)
         self.Bind(wx.EVT_CHECKBOX, self.onCheckBoxClick) 
+
+    def onSaveClick(self,event):
+        OptionsManager.saveOptions(
+            projects = self.content_table.projects,
+            compares = self.content_table.compares,
+            headers = self.content_table.headers,
+            WL = self.white_list, BL = self.black_list,
+            WLC = self.WL_check.GetValue(), BLS = self.BL_check.GetValue(),
+            AEC = self.AE_check.GetValue(), CEC = self.CE_check.GetValue()
+            )
 
     def onHeaderClick(self,event):
         new_window = HeaderWindow(self,self.content_table)

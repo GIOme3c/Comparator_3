@@ -1,9 +1,9 @@
 import wx
-from debug import timer
 from wx import HORIZONTAL,VERTICAL
+from debug import timer
 from SettingsPanel import SettingsPanel
-import HTMLManager
 from Content import ContentTable
+import HTMLManager, OptionsManager
 
 class MainWindow(wx.Frame):
     #@timer
@@ -19,8 +19,9 @@ class MainWindow(wx.Frame):
         self.log = self.CreateStatusBar(1)
         self.Bind(wx.EVT_CLOSE, self.onClose)
 
-        self.SettingsPanel = SettingsPanel(self, self.content_table)
-        self.content_table.set_sPanel(self.SettingsPanel)
+        options = OptionsManager.getOptions()
+        self.SettingsPanel = SettingsPanel(self, self.content_table, options)
+        self.content_table.set_sPanel(self.SettingsPanel, options)
 
         sizer.Add(self.SettingsPanel, 0, wx.EXPAND, 0)
         sizer.Add(self.Browser, 1, wx.EXPAND ,0)

@@ -1,5 +1,5 @@
 from random import random
-import wx, os
+import wx
 from debug import timer
 from wx import HORIZONTAL,VERTICAL
 import ConstantLib as CL
